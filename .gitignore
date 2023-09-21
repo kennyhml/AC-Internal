@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+bin
+.vs
+enc_temp_folder
