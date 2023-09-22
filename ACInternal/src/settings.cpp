@@ -10,6 +10,7 @@ namespace settings
 		bool antiGravity;
 		bool flyHack;
 		bool ghostMode;
+		bool alwaysHeadshot;
 
 	}
 }

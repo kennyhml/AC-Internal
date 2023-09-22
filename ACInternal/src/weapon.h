@@ -45,3 +45,6 @@ struct WeaponData
 	int16_t enemyKnockback; //0x0126
 	bool isAutomatic; //0x0128
 };
+
+void ToggleAlwaysHeadshot(bool toggle, uintptr_t modBaseAddr);
+

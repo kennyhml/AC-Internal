@@ -10,6 +10,7 @@ namespace settings
 		extern bool antiGravity;
 		extern bool flyHack;
 		extern bool ghostMode;
+		extern bool alwaysHeadshot;
 
 	}
 

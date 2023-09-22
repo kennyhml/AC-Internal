@@ -1,11 +1,9 @@
 #include "tools/mem.h"
 #include "player.h"
 #include "settings.h"
-
 #include <Windows.h>
 #include <iostream>
 #include <TlHelp32.h>
-
 
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
 
@@ -13,31 +11,49 @@ twglSwapBuffers wglSwapBuffersGateway;
 static uintptr_t modBaseAddress;
 static bool eject = false;
 
+/**
+ * @brief wglSwapBuffers hook function to execute our cheats code as the
+ * function gets executed once every frame.
+ *
+ * A trampoline hook is placed in the original flo of the function which jumps
+ * to this function, after we finished our execution we pass execution on to our
+ * gateway which will execute the bytes we originally stole and then jump back
+ * to the appropriate location in the original function.
+ */
 BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 {
 	Player* localPlayer = (Player*)*(uintptr_t*)(modBaseAddress + 0x10F4F4);
 
 	if (GetAsyncKeyState(VK_DELETE) & 1) {
 		eject = true;
-		if (settings::player::godMode)
-		{
-			ToggleGodmode(false, modBaseAddress, localPlayer);
-		}
+		if (settings::player::godMode) { ToggleGodmode(false, modBaseAddress, localPlayer); }
+		if (settings::player::alwaysHeadshot) { ToggleAlwaysHeadshot(false, modBaseAddress); }
 	}
 
-	if (GetAsyncKeyState(VK_F1) & 1) {
+	if (GetAsyncKeyState(VK_F2) & 1) {
 		settings::player::godMode = !settings::player::godMode;
 		ToggleGodmode(settings::player::godMode, modBaseAddress, localPlayer);
+	}
+
+	if (GetAsyncKeyState(VK_F3) & 1) {
+		settings::player::alwaysHeadshot = !settings::player::alwaysHeadshot;
+		ToggleAlwaysHeadshot(settings::player::alwaysHeadshot, modBaseAddress);
 	}
 
 	return wglSwapBuffersGateway(hDc);
 }
 
+/**
+ * @brief Creates a trampoline hook from the games wglSwapBuffers function to
+ * our hkwglSwapBuffers to the gateway and back to wglSwapBuffers.
+ *
+ * @param hook Whether to hook or unhook wglSwapBuffers.
+ */
 void hookSwapBuffers(bool hook)
 {
+	// Acquire the address of the wglSwapBuffers function in the opengl32.dll module
 	HMODULE openglModule = GetModuleHandle(L"opengl32.dll");
 	if (!openglModule) { throw std::runtime_error("GetModuleHandle(\"opengl32.dll\" failed."); }
-
 	FARPROC wglSwapBuffersAddr = GetProcAddress(openglModule, "wglSwapBuffers");
 	if (!wglSwapBuffersAddr) { throw std::runtime_error("GetProcAddress for wglSwapBuffers failed."); }
 
