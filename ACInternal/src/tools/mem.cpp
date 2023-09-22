@@ -49,7 +49,7 @@ uintptr_t FindDMAAddy(uintptr_t ptr, std::vector<unsigned int> offsets)
 	return addr;
 }
 
-bool Hook(void* toHook, void* ourFunction, int length)
+bool Detour32(BYTE* src, BYTE* dst, int length)
 {
 	// A JMP instruction (E9) is one byte, in a 32-bit process an address is
 	// 32-bit or 4 bytes. Meaning we need at least 5 bytes of space to ourselves
@@ -58,19 +58,44 @@ bool Hook(void* toHook, void* ourFunction, int length)
 
 	// Set the protection level to allow us to modify the memory
 	DWORD oldProtect;
-	VirtualProtect(toHook, length, PAGE_EXECUTE_READWRITE, &oldProtect);
+	VirtualProtect(src, length, PAGE_EXECUTE_READWRITE, &oldProtect);
 
 	// NOP all the bytes
-	memset(toHook, 0x90, length);
+	memset(src, 0x90, length);
 
 	// JMP instructions use relative addresses, which means we need to find the offset from
 	// the instruction we are hooking to the address of the function we want to jump to.
-	DWORD relativeAddress = ((DWORD)ourFunction - (DWORD)toHook) - 5;
+	DWORD relativeAddress = ((DWORD)dst - (DWORD)src) - 5;
 
 	// Replace the first byte with the JMP instruction, then the DWORD (bytes 2 - 5) with the address
-	*(BYTE*)toHook = 0xE9;
-	*(DWORD*)((DWORD)toHook + 1) = relativeAddress;
+	*src = 0xE9;
+	*(uintptr_t*)(src + 1) = relativeAddress;
 
-	VirtualProtect(toHook, length, oldProtect, &oldProtect);
+	VirtualProtect(src, length, oldProtect, &oldProtect);
 	return true;
+}
+
+
+BYTE* TrampHook32(BYTE* src, BYTE* dst, int length)
+{
+
+	if (length < 5) { return 0; }
+
+	// Allocate memory for our gateway function that will execute the original instructions
+	// we will overwrite with our jmp, then jump back execution to the instruction after the jump
+	BYTE* gateway = (BYTE*)VirtualAlloc(0, length, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+
+	// Copy the instructions at our source (where we will later place the jump to our hook)
+	// to our gateway so we can execute them there later.
+	memcpy_s(gateway, length, src, length);
+
+	// Get the relative offset to the src from our gateway
+	uintptr_t gatewayRelativeAddr = src - gateway - 5;
+
+	// jump back to the original program execution
+	*(gateway + length) = 0xE9;
+	*(uintptr_t*)(gateway + length + 1) = gatewayRelativeAddr;
+
+	Detour32(src, dst, length);
+	return gateway;
 }
