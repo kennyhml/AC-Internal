@@ -47,4 +47,6 @@ struct WeaponData
 };
 
 void ToggleAlwaysHeadshot(bool toggle, uintptr_t modBaseAddr);
-
+void ToggleRecoil(bool toggle, uintptr_t modBaseAddr);
+void ToggleRapidFire(bool toggle, uintptr_t modBaseAddr);
+void ToggleInfiniteAmmo(bool toggle, uintptr_t modBaseAddr);

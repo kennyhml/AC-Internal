@@ -10,7 +10,12 @@ namespace settings
 		bool antiGravity;
 		bool flyHack;
 		bool ghostMode;
+	}
+	namespace weapon
+	{
 		bool alwaysHeadshot;
-
+		bool noRecoil;
+		bool rapidFire;
+		bool infiniteAmmo;
 	}
 }

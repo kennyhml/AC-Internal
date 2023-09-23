@@ -10,16 +10,14 @@ namespace settings
 		extern bool antiGravity;
 		extern bool flyHack;
 		extern bool ghostMode;
-		extern bool alwaysHeadshot;
-
 	}
 
 	namespace weapon
 	{
-
-
-
-
+		extern bool alwaysHeadshot;
+		extern bool noRecoil;
+		extern bool rapidFire;
+		extern bool infiniteAmmo;
 	}
 
 	namespace esp

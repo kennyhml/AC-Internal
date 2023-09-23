@@ -38,3 +38,31 @@ void ToggleAlwaysHeadshot(bool toggle, uintptr_t modBaseAddr)
 		std::cout << "[+] Always headshot disabled. VirtualFree: " << (freed ? "Success" : "Failed") << std::endl;
 	}
 }
+
+
+void ToggleRecoil(bool toggle, uintptr_t modBaseAddr)
+{
+	uintptr_t recoilAddr = modBaseAddr + 0x62020;
+
+	if (toggle) { Patch((BYTE*)recoilAddr, (BYTE*)"\xC2\x08\x00", 3); }
+	else { Patch((BYTE*)recoilAddr, (BYTE*)"\x55\x8B\xEC", 3); }
+}
+
+void ToggleRapidFire(bool toggle, uintptr_t modBaseAddr)
+{
+	uintptr_t cooldownAddr = modBaseAddr + 0x637E4;
+
+	if (toggle) { Nop((BYTE*)cooldownAddr, 2); }
+	else { Patch((BYTE*)cooldownAddr, (BYTE*)"\x89\x0A", 2); }
+
+}
+
+void ToggleInfiniteAmmo(bool toggle, uintptr_t modBaseAddr)
+{
+	uintptr_t ammoAddr = modBaseAddr + 0x637E9;
+
+	if (toggle) { Nop((BYTE*)ammoAddr, 2); }
+	else { Patch((BYTE*)ammoAddr, (BYTE*)"\xFF\x0E", 2); }
+
+}
+

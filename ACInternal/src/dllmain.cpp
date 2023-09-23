@@ -6,16 +6,11 @@
 #include <TlHelp32.h>
 
 
-// 0046226D
-// 00463DD5
-
-
 // f0: green, f1: blue, f2: yellow, f3: red, f4: gray, f5: white, f6: brown, f7: ugly red
-// f8: puple, f9: orange, fa: pink, fb: darker red?? fc: darker brown?
-
-typedef void(__stdcall* printConsole) (const char* FormatString, ...);
-typedef void(__stdcall* printAll) (const char* FormatString, ...);
-typedef void(__thiscall* printMiddle) (const char* FormatString);
+// f8: puple, f9: orange, fa: pink, fb: darker red fc: darker brown
+typedef void(__stdcall* printConsole) (const char* formatString, ...);
+typedef void(__stdcall* printAll) (const char* formatString, ...);
+typedef void(__thiscall* printMiddle) (const char* string);
 
 printAll hkPrintAll;
 printConsole hkPrintConsole;
@@ -43,7 +38,10 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_DELETE) & 1) {
 		eject = true;
 		if (settings::player::godMode) { ToggleGodmode(false, modBaseAddress, localPlayer); }
-		if (settings::player::alwaysHeadshot) { ToggleAlwaysHeadshot(false, modBaseAddress); }
+		if (settings::weapon::alwaysHeadshot) { ToggleAlwaysHeadshot(false, modBaseAddress); }
+		if (settings::weapon::noRecoil) { ToggleRecoil(false, modBaseAddress); }
+		if (settings::weapon::rapidFire) { ToggleRapidFire(false, modBaseAddress); }
+		if (settings::weapon::infiniteAmmo) { ToggleInfiniteAmmo(false, modBaseAddress); }
 	}
 
 	if (GetAsyncKeyState(VK_F2) & 1) {
@@ -53,9 +51,27 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	}
 
 	if (GetAsyncKeyState(VK_F3) & 1) {
-		settings::player::alwaysHeadshot = !settings::player::alwaysHeadshot;
-		hkPrintAll(settings::player::alwaysHeadshot ? "<Headshots \f0[ON]\f5!>" : "<Headshots \f3[OFF]\f5!>");
-		ToggleAlwaysHeadshot(settings::player::alwaysHeadshot, modBaseAddress);
+		settings::weapon::alwaysHeadshot = !settings::weapon::alwaysHeadshot;
+		hkPrintAll(settings::weapon::alwaysHeadshot ? "<Headshots \f0[ON]\f5!>" : "<Headshots \f3[OFF]\f5!>");
+		ToggleAlwaysHeadshot(settings::weapon::alwaysHeadshot, modBaseAddress);
+	}
+
+	if (GetAsyncKeyState(VK_F4) & 1) {
+		settings::weapon::noRecoil = !settings::weapon::noRecoil;
+		hkPrintAll(settings::weapon::noRecoil ? "<No Recoil \f0[ON]\f5!>" : "<No Recoil \f3[OFF]\f5!>");
+		ToggleRecoil(settings::weapon::noRecoil, modBaseAddress);
+	}
+
+	if (GetAsyncKeyState(VK_F5) & 1) {
+		settings::weapon::rapidFire = !settings::weapon::rapidFire;
+		hkPrintAll(settings::weapon::rapidFire ? "<Rapid Fire \f0[ON]\f5!>" : "<Rapid Fire \f3[OFF]\f5!>");
+		ToggleRapidFire(settings::weapon::rapidFire, modBaseAddress);
+	}
+
+	if (GetAsyncKeyState(VK_F6) & 1) {
+		settings::weapon::infiniteAmmo = !settings::weapon::infiniteAmmo;
+		hkPrintAll(settings::weapon::infiniteAmmo ? "<Inf. Ammo \f0[ON]\f5!>" : "<Inf. Ammo \f3[OFF]\f5!>");
+		ToggleInfiniteAmmo(settings::weapon::infiniteAmmo, modBaseAddress);
 	}
 
 	return wglSwapBuffersGateway(hDc);
