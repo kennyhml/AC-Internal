@@ -19,8 +19,8 @@ printMiddle hkPrintMiddle;
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
 
 twglSwapBuffers wglSwapBuffersGateway;
-static uintptr_t modBaseAddress;
-static bool eject = false;
+uintptr_t modBaseAddress;
+bool eject = false;
 
 /**
  * @brief wglSwapBuffers hook function to execute our cheats code as the
@@ -40,8 +40,8 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		if (settings::player::godMode) { ToggleGodmode(false, modBaseAddress, localPlayer); }
 		if (settings::weapon::alwaysHeadshot) { ToggleAlwaysHeadshot(false, modBaseAddress); }
 		if (settings::weapon::noRecoil) { ToggleRecoil(false, modBaseAddress); }
-		if (settings::weapon::rapidFire) { ToggleRapidFire(false, modBaseAddress); }
-		if (settings::weapon::infiniteAmmo) { ToggleInfiniteAmmo(false, modBaseAddress); }
+		if (settings::weapon::rapidFire) { ToggleRapidFire(false, modBaseAddress, (uintptr_t)localPlayer); }
+		if (settings::weapon::infiniteAmmo) { ToggleInfiniteAmmo(false, modBaseAddress, (uintptr_t)localPlayer); }
 	}
 
 	if (GetAsyncKeyState(VK_F2) & 1) {
@@ -65,13 +65,13 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_F5) & 1) {
 		settings::weapon::rapidFire = !settings::weapon::rapidFire;
 		hkPrintAll(settings::weapon::rapidFire ? "<Rapid Fire \f0[ON]\f5!>" : "<Rapid Fire \f3[OFF]\f5!>");
-		ToggleRapidFire(settings::weapon::rapidFire, modBaseAddress);
+		ToggleRapidFire(settings::weapon::rapidFire, modBaseAddress, (uintptr_t)localPlayer);
 	}
 
 	if (GetAsyncKeyState(VK_F6) & 1) {
 		settings::weapon::infiniteAmmo = !settings::weapon::infiniteAmmo;
 		hkPrintAll(settings::weapon::infiniteAmmo ? "<Inf. Ammo \f0[ON]\f5!>" : "<Inf. Ammo \f3[OFF]\f5!>");
-		ToggleInfiniteAmmo(settings::weapon::infiniteAmmo, modBaseAddress);
+		ToggleInfiniteAmmo(settings::weapon::infiniteAmmo, modBaseAddress, (uintptr_t)localPlayer);
 	}
 
 	return wglSwapBuffersGateway(hDc);
@@ -100,6 +100,7 @@ void hookSwapBuffers(bool hook)
 	else
 	{
 		Patch((BYTE*)wglSwapBuffersAddr, (BYTE*)"\x8B\xFF\x55\x8B\xEC", 5);
+		Sleep(5);
 		Nop((BYTE*)wglSwapBuffersGateway, 10);
 		bool freed = VirtualFree((BYTE*)wglSwapBuffersGateway, 0, MEM_RELEASE);
 		std::cout << "[+] wglSwapBuffers unhooked. VirualFree: " << (freed ? "Success" : "Failure") << std::endl;
@@ -123,7 +124,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 	hookSwapBuffers(true);
 	while (!eject) { Sleep(100); }
-	std::cout << "[+] Ejecting...";
+	std::cout << "[+] Ejecting!" << std::endl;
 
 	hookSwapBuffers(false);
 

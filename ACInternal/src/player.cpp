@@ -59,6 +59,7 @@ void ToggleGodmode(bool toggle, uintptr_t modBaseAddress, const Player* localPla
 	{
 		// Write the original instructions back instead of our hook
 		Patch((BYTE*)addressToHook, (BYTE*)"\x2B\xF8\x29\x7B\x04", size);
+		Sleep(5);
 		Nop((BYTE*)healthGateway, size + 5);
 		bool freed = VirtualFree((BYTE*)healthGateway, 0, MEM_RELEASE);
 

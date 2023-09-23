@@ -5,17 +5,17 @@ namespace settings
 {
 	namespace player
 	{
-		int speed;
-		bool godMode;
-		bool antiGravity;
-		bool flyHack;
-		bool ghostMode;
+		int speed = false;
+		bool godMode = false;
+		bool antiGravity = false;
+		bool flyHack = false;
+		bool ghostMode = false;
 	}
 	namespace weapon
 	{
-		bool alwaysHeadshot;
-		bool noRecoil;
-		bool rapidFire;
-		bool infiniteAmmo;
+		bool alwaysHeadshot = false;
+		bool noRecoil = false;
+		bool rapidFire = false;
+		bool infiniteAmmo = false;
 	}
 }
