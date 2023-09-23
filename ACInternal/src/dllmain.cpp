@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <TlHelp32.h>
-
+#include <string>
 
 // f0: green, f1: blue, f2: yellow, f3: red, f4: gray, f5: white, f6: brown, f7: ugly red
 // f8: puple, f9: orange, fa: pink, fb: darker red fc: darker brown
@@ -77,6 +77,58 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	return wglSwapBuffersGateway(hDc);
 }
 
+
+uintptr_t consoleHookGateway;
+char* string;
+char resultStr[256];
+char* found;
+void __declspec(naked) consoleHook()
+{
+	uintptr_t stringAddr;
+	uintptr_t oldEcx;
+
+	__asm {
+		mov oldEcx, ecx
+		mov stringAddr, ecx
+	}
+
+	string = (char*)(stringAddr);
+	found = strstr(string, "headshot");
+
+	if (found) {
+		size_t startPos = found - string;
+		strncpy_s(resultStr, string, startPos);
+		resultStr[startPos] = '\0';
+		strcat_s(resultStr, "fucked");
+		strcat_s(resultStr, found + strlen("headshot"));
+		oldEcx = (uintptr_t)resultStr;
+	}
+
+	__asm {
+		mov ecx, oldEcx
+		jmp[consoleHookGateway]
+	}
+}
+
+
+void hookIngameConsole(bool hook)
+{
+
+	if (hook)
+	{
+		consoleHookGateway = (uintptr_t)TrampHook32((BYTE*)modBaseAddress + 0x911B, (BYTE*)consoleHook, 8);
+		std::cout << "[+] Ingame console hooked. Gateway at 0x" << std::uppercase << std::hex << consoleHookGateway << std::endl;
+	}
+	else
+	{
+		Patch((BYTE*)modBaseAddress + 0x911B, (BYTE*)"\xC6\x84\x24\x03\x01\x00\x00\x00", 8);
+		Sleep(20);
+		Nop((BYTE*)consoleHookGateway, 10);
+		bool freed = VirtualFree((BYTE*)consoleHookGateway, 0, MEM_RELEASE);
+		std::cout << "[+] Ingame console unhooked. VirualFree: " << (freed ? "Success" : "Failure") << std::endl;
+	}
+}
+
 /**
  * @brief Creates a trampoline hook from the games wglSwapBuffers function to
  * our hkwglSwapBuffers to the gateway and back to wglSwapBuffers.
@@ -122,11 +174,13 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 	hkPrintAll("\f0<Injected successfully!>");
 
+	hookIngameConsole(true);
 	hookSwapBuffers(true);
 	while (!eject) { Sleep(100); }
 	std::cout << "[+] Ejecting!" << std::endl;
 
 	hookSwapBuffers(false);
+	hookIngameConsole(false);
 
 	if (f) { fclose(f); }
 	FreeConsole();
