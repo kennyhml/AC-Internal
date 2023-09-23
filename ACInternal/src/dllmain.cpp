@@ -5,6 +5,22 @@
 #include <iostream>
 #include <TlHelp32.h>
 
+
+// 0046226D
+// 00463DD5
+
+
+// f0: green, f1: blue, f2: yellow, f3: red, f4: gray, f5: white, f6: brown, f7: ugly red
+// f8: puple, f9: orange, fa: pink, fb: darker red?? fc: darker brown?
+
+typedef void(__stdcall* printConsole) (const char* FormatString, ...);
+typedef void(__stdcall* printAll) (const char* FormatString, ...);
+typedef void(__thiscall* printMiddle) (const char* FormatString);
+
+printAll hkPrintAll;
+printConsole hkPrintConsole;
+printMiddle hkPrintMiddle;
+
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
 
 twglSwapBuffers wglSwapBuffersGateway;
@@ -32,11 +48,13 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 
 	if (GetAsyncKeyState(VK_F2) & 1) {
 		settings::player::godMode = !settings::player::godMode;
+		hkPrintAll(settings::player::godMode ? "<Godmode \f0[ON]\f5!>" : "<Godmode \f3[OFF]\f5!>");
 		ToggleGodmode(settings::player::godMode, modBaseAddress, localPlayer);
 	}
 
 	if (GetAsyncKeyState(VK_F3) & 1) {
 		settings::player::alwaysHeadshot = !settings::player::alwaysHeadshot;
+		hkPrintAll(settings::player::alwaysHeadshot ? "<Headshots \f0[ON]\f5!>" : "<Headshots \f3[OFF]\f5!>");
 		ToggleAlwaysHeadshot(settings::player::alwaysHeadshot, modBaseAddress);
 	}
 
@@ -81,6 +99,11 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	std::cout << "DLL injected!\n";
 
 	modBaseAddress = (uintptr_t)GetModuleHandle(L"ac_client.exe");
+	hkPrintConsole = (printConsole)(modBaseAddress + 0x6B060);
+	hkPrintMiddle = (printMiddle)(modBaseAddress + 0x8E80);
+	hkPrintAll = (printAll)(modBaseAddress + 0x90F0);
+
+	hkPrintAll("\f0<Injected successfully!>");
 
 	hookSwapBuffers(true);
 	while (!eject) { Sleep(100); }
@@ -90,6 +113,8 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 	if (f) { fclose(f); }
 	FreeConsole();
+	hkPrintAll("\f0<Ejected successfully!>");
+
 	FreeLibraryAndExitThread(hModule, 0);
 	return 0;
 }
