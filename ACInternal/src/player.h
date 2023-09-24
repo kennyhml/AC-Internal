@@ -70,6 +70,3 @@ struct Player
 	bool isEnemy(Team localPlayerTeam, GameMode mode) const;
 	bool isAlive() const;
 };
-
-
-void ToggleGodmode(bool toggle, uintptr_t modBaseAddress, const Player* localPlayer);

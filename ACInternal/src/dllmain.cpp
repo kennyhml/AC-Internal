@@ -1,10 +1,11 @@
 #include "tools/mem.h"
 #include "player.h"
 #include "settings.h"
-#include <Windows.h>
+#include <windows.h>
+#include "hooks/hook.h"
+
 #include <iostream>
 #include <TlHelp32.h>
-#include <string>
 
 // f0: green, f1: blue, f2: yellow, f3: red, f4: gray, f5: white, f6: brown, f7: ugly red
 // f8: puple, f9: orange, fa: pink, fb: darker red fc: darker brown
@@ -19,7 +20,6 @@ printMiddle hkPrintMiddle;
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
 
 twglSwapBuffers wglSwapBuffersGateway;
-uintptr_t modBaseAddress;
 bool eject = false;
 
 /**
@@ -33,11 +33,12 @@ bool eject = false;
  */
 BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 {
+	uintptr_t modBaseAddress = GetMBA();
 	Player* localPlayer = (Player*)*(uintptr_t*)(modBaseAddress + 0x10F4F4);
 
 	if (GetAsyncKeyState(VK_DELETE) & 1) {
 		eject = true;
-		if (settings::player::godMode) { ToggleGodmode(false, modBaseAddress, localPlayer); }
+		// if (settings::player::godMode) { hooks::health.Disable(); }
 		if (settings::weapon::alwaysHeadshot) { ToggleAlwaysHeadshot(false, modBaseAddress); }
 		if (settings::weapon::noRecoil) { ToggleRecoil(false, modBaseAddress); }
 		if (settings::weapon::rapidFire) { ToggleRapidFire(false, modBaseAddress, (uintptr_t)localPlayer); }
@@ -47,7 +48,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_F2) & 1) {
 		settings::player::godMode = !settings::player::godMode;
 		hkPrintAll(settings::player::godMode ? "<Godmode \f0[ON]\f5!>" : "<Godmode \f3[OFF]\f5!>");
-		ToggleGodmode(settings::player::godMode, modBaseAddress, localPlayer);
+		// hooks::health.Toggle();
 	}
 
 	if (GetAsyncKeyState(VK_F3) & 1) {
@@ -116,12 +117,12 @@ void hookIngameConsole(bool hook)
 
 	if (hook)
 	{
-		consoleHookGateway = (uintptr_t)TrampHook32((BYTE*)modBaseAddress + 0x911B, (BYTE*)consoleHook, 8);
+		consoleHookGateway = (uintptr_t)hooks::TrampHook32((BYTE*)GetMBA() + 0x911B, (BYTE*)consoleHook, 8);
 		std::cout << "[+] Ingame console hooked. Gateway at 0x" << std::uppercase << std::hex << consoleHookGateway << std::endl;
 	}
 	else
 	{
-		Patch((BYTE*)modBaseAddress + 0x911B, (BYTE*)"\xC6\x84\x24\x03\x01\x00\x00\x00", 8);
+		Patch((BYTE*)GetMBA() + 0x911B, (BYTE*)"\xC6\x84\x24\x03\x01\x00\x00\x00", 8);
 		Sleep(20);
 		Nop((BYTE*)consoleHookGateway, 10);
 		bool freed = VirtualFree((BYTE*)consoleHookGateway, 0, MEM_RELEASE);
@@ -129,58 +130,32 @@ void hookIngameConsole(bool hook)
 	}
 }
 
-/**
- * @brief Creates a trampoline hook from the games wglSwapBuffers function to
- * our hkwglSwapBuffers to the gateway and back to wglSwapBuffers.
- *
- * @param hook Whether to hook or unhook wglSwapBuffers.
- */
-void hookSwapBuffers(bool hook)
-{
-	// Acquire the address of the wglSwapBuffers function in the opengl32.dll module
-	HMODULE openglModule = GetModuleHandle(L"opengl32.dll");
-	if (!openglModule) { throw std::runtime_error("GetModuleHandle(\"opengl32.dll\" failed."); }
-	FARPROC wglSwapBuffersAddr = GetProcAddress(openglModule, "wglSwapBuffers");
-	if (!wglSwapBuffersAddr) { throw std::runtime_error("GetProcAddress for wglSwapBuffers failed."); }
-
-	if (hook)
-	{
-		BYTE* gateway = TrampHook32((BYTE*)wglSwapBuffersAddr, (BYTE*)hkwglSwapBuffers, 5);
-		wglSwapBuffersGateway = reinterpret_cast<twglSwapBuffers>(gateway);
-		std::cout << "[+] wglSwapBuffers hooked. Gateway at 0x" << std::uppercase << std::hex << wglSwapBuffersGateway << std::endl;
-	}
-	else
-	{
-		Patch((BYTE*)wglSwapBuffersAddr, (BYTE*)"\x8B\xFF\x55\x8B\xEC", 5);
-		Sleep(5);
-		Nop((BYTE*)wglSwapBuffersGateway, 10);
-		bool freed = VirtualFree((BYTE*)wglSwapBuffersGateway, 0, MEM_RELEASE);
-		std::cout << "[+] wglSwapBuffers unhooked. VirualFree: " << (freed ? "Success" : "Failure") << std::endl;
-	}
-}
-
 DWORD WINAPI HackThread(HMODULE hModule)
 {
-
 	AllocConsole();
 	FILE* f;
 	freopen_s(&f, "CONOUT$", "w", stdout);
 	std::cout << "DLL injected!\n";
 
-	modBaseAddress = (uintptr_t)GetModuleHandle(L"ac_client.exe");
+	uintptr_t modBaseAddress = GetMBA();
 	hkPrintConsole = (printConsole)(modBaseAddress + 0x6B060);
 	hkPrintMiddle = (printMiddle)(modBaseAddress + 0x8E80);
 	hkPrintAll = (printAll)(modBaseAddress + 0x90F0);
 
 	hkPrintAll("\f0<Injected successfully!>");
 
-	hookIngameConsole(true);
-	hookSwapBuffers(true);
+	Player* localPlayer = (Player*)*(uintptr_t*)(modBaseAddress + 0x10F4F4);
+	hooks::localPlayerAddress = (uintptr_t)localPlayer;
+
+	auto swapBuffersHook = hooks::Hook("wglSwapBuffers", "opengl32.dll", (BYTE*)hkwglSwapBuffers, (BYTE*)&wglSwapBuffersGateway, 5);
+
+	swapBuffersHook.Enable();
+	std::cout << "[+] Gateway at 0x" << std::uppercase << std::hex << wglSwapBuffersGateway << std::endl;
+
 	while (!eject) { Sleep(100); }
 	std::cout << "[+] Ejecting!" << std::endl;
 
-	hookSwapBuffers(false);
-	hookIngameConsole(false);
+	swapBuffersHook.Disable();
 
 	if (f) { fclose(f); }
 	FreeConsole();

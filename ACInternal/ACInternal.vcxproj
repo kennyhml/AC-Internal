@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="src\enums.h" />
     <ClInclude Include="src\geometry.h" />
+    <ClInclude Include="src\hooks\hook.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\settings.h" />
     <ClInclude Include="src\tools\mem.h" />
@@ -169,6 +170,8 @@
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\geometry.cpp" />
+    <ClCompile Include="src\hooks\health.cpp" />
+    <ClCompile Include="src\hooks\hook.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\settings.cpp" />
     <ClCompile Include="src\tools\mem.cpp" />

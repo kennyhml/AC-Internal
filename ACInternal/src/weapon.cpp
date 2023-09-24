@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <iostream>
 #include "tools/mem.h"
+#include "hooks/hook.h"
 
 uintptr_t localPlayerAddr;
 
@@ -106,7 +107,7 @@ void ToggleAlwaysHeadshot(bool toggle, uintptr_t modBaseAddr)
 
 	if (toggle)
 	{
-		headshotGateway = (uintptr_t)TrampHook32((BYTE*)headshotCheckAddr, (BYTE*)headshotHook, 5);
+		headshotGateway = (uintptr_t)hooks::TrampHook32((BYTE*)headshotCheckAddr, (BYTE*)headshotHook, 5);
 		std::cout << "[+] Always headshot enabled. Headshot hook gateway at 0x" << std::uppercase << std::hex << headshotGateway << std::endl;
 	}
 	else
@@ -134,7 +135,7 @@ void ToggleRapidFire(bool toggle, uintptr_t modBaseAddr, uintptr_t localPlayerAd
 	if (toggle)
 	{
 		localPlayerAddr = localPlayerAddress;
-		cooldownHookGateway = (uintptr_t)TrampHook32((BYTE*)cooldownAddr, (BYTE*)fireCooldownHook, 5);
+		cooldownHookGateway = (uintptr_t)hooks::TrampHook32((BYTE*)cooldownAddr, (BYTE*)fireCooldownHook, 5);
 	}
 	else
 	{
@@ -152,7 +153,7 @@ void ToggleInfiniteAmmo(bool toggle, uintptr_t modBaseAddr, uintptr_t localPlaye
 	if (toggle)
 	{
 		localPlayerAddr = localPlayerAddress;
-		ammoHookGateway = (uintptr_t)TrampHook32((BYTE*)ammoAddr, (BYTE*)ammoHook, 5);
+		ammoHookGateway = (uintptr_t)hooks::TrampHook32((BYTE*)ammoAddr, (BYTE*)ammoHook, 5);
 	}
 	else
 	{

@@ -33,6 +33,9 @@
     <ClInclude Include="src\settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\hooks\hook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -51,6 +54,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hooks\hook.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hooks\health.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
