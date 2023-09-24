@@ -41,7 +41,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		if (settings::player::godMode) { hooks::health.Disable(); }
 		if (settings::weapon::alwaysHeadshot) { hooks::headshot.Disable(); }
 		if (settings::weapon::noRecoil) { ToggleRecoil(false, modBaseAddress); }
-		if (settings::weapon::rapidFire) { ToggleRapidFire(false, modBaseAddress, (uintptr_t)localPlayer); }
+		if (settings::weapon::rapidFire) { hooks::rapidFire.Disable(); }
 		if (settings::weapon::infiniteAmmo) { hooks::ammo.Disable(); }
 	}
 
@@ -54,7 +54,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_F3) & 1) {
 		settings::weapon::alwaysHeadshot = !settings::weapon::alwaysHeadshot;
 		hkPrintAll(settings::weapon::alwaysHeadshot ? "<Headshots \f0[ON]\f5!>" : "<Headshots \f3[OFF]\f5!>");
-		hooks::headshot.Enable();
+		hooks::headshot.Toggle();
 	}
 
 	if (GetAsyncKeyState(VK_F4) & 1) {
@@ -66,7 +66,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_F5) & 1) {
 		settings::weapon::rapidFire = !settings::weapon::rapidFire;
 		hkPrintAll(settings::weapon::rapidFire ? "<Rapid Fire \f0[ON]\f5!>" : "<Rapid Fire \f3[OFF]\f5!>");
-		ToggleRapidFire(settings::weapon::rapidFire, modBaseAddress, (uintptr_t)localPlayer);
+		hooks::rapidFire.Toggle();
 	}
 
 	if (GetAsyncKeyState(VK_F6) & 1) {
