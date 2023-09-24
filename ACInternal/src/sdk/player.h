@@ -1,10 +1,9 @@
 #pragma once
 
-#include "geometry.h"
-#include "enums.h"
-#include "weapon.h"
+#include "sdk.h"
+#include "../geometry.h"
 
-struct Player
+struct SDK::Player
 {
 	uint32_t* vTable; //0x0000
 	Vector3 headPos; //0x0004

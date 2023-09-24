@@ -1,5 +1,5 @@
 #include "tools/mem.h"
-#include "player.h"
+#include "sdk/sdk.h"
 #include "settings.h"
 #include <windows.h>
 #include "hooks/hook.h"
@@ -33,13 +33,13 @@ bool eject = false;
  */
 BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 {
-	Player* localPlayer = (Player*)*(uintptr_t*)(GetMBA() + 0x10F4F4);
+	SDK::Player* localPlayer = (SDK::Player*)*(uintptr_t*)(GetMBA() + 0x10F4F4);
 
 	if (GetAsyncKeyState(VK_DELETE) & 1) {
 		eject = true;
 		if (settings::player::godMode) { hooks::health.Disable(); }
 		if (settings::weapon::alwaysHeadshot) { hooks::headshot.Disable(); }
-		if (settings::weapon::noRecoil) { ToggleRecoil(false); }
+		if (settings::weapon::noRecoil) { hooks::ToggleRecoil(false); }
 		if (settings::weapon::rapidFire) { hooks::rapidFire.Disable(); }
 		if (settings::weapon::infiniteAmmo) { hooks::ammo.Disable(); }
 	}
@@ -59,7 +59,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_F4) & 1) {
 		settings::weapon::noRecoil = !settings::weapon::noRecoil;
 		hkPrintAll(settings::weapon::noRecoil ? "<No Recoil \f0[ON]\f5!>" : "<No Recoil \f3[OFF]\f5!>");
-		ToggleRecoil(settings::weapon::noRecoil);
+		hooks::ToggleRecoil(settings::weapon::noRecoil);
 	}
 
 	if (GetAsyncKeyState(VK_F5) & 1) {
@@ -91,7 +91,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 	hkPrintAll("\f0<Injected successfully!>");
 
-	Player* localPlayer = (Player*)*(uintptr_t*)(modBaseAddress + 0x10F4F4);
+	SDK::Player* localPlayer = (SDK::Player*)*(uintptr_t*)(modBaseAddress + 0x10F4F4);
 	hooks::localPlayerAddress = (uintptr_t)localPlayer;
 	auto swapBuffersHook = hooks::Hook("wglSwapBuffers", "opengl32.dll", (BYTE*)hkwglSwapBuffers, (BYTE*)&wglSwapBuffersGateway, 5);
 

@@ -1,11 +1,7 @@
 #pragma once
-#include <memory>
+#include "sdk.h"
 
-struct Player;
-struct ReserveData;
-struct WeaponData;
-
-struct Weapon
+struct SDK::Weapon
 {
 	uint32_t* vTable; //0x0000
 	int32_t ID; //0x0004
@@ -14,7 +10,7 @@ struct Weapon
 	ReserveData* reserveData; //0x0010
 };
 
-struct ReserveData
+struct SDK::ReserveData
 {
 	int32_t reserveAmmo; //0x0000
 	char pad_0004[36]; //0x0004
@@ -26,7 +22,7 @@ struct ReserveData
 
 };
 
-struct WeaponData
+struct SDK::WeaponData
 {
 	char name[7]; //0x0000
 	char pad_0007[257]; //0x0007
@@ -45,5 +41,3 @@ struct WeaponData
 	int16_t enemyKnockback; //0x0126
 	bool isAutomatic; //0x0128
 };
-
-void ToggleRecoil(bool toggle);

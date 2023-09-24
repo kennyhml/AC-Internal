@@ -18,22 +18,22 @@
     <ClInclude Include="src\tools\mem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\enums.h">
+    <ClInclude Include="src\sdk\enums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\weapon.h">
+    <ClInclude Include="src\sdk\weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\hooks\hook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sdk\sdk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -45,12 +45,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\geometry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\settings.cpp">
@@ -68,10 +62,19 @@
     <ClCompile Include="src\hooks\headshot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\hooks\rapidfire.cpp">
+    <ClCompile Include="src\hooks\fire.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\hooks\console.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hooks\recoil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdk\player.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sdk\player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

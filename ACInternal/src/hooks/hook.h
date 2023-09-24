@@ -33,6 +33,7 @@ namespace hooks
 	extern Hook rapidFire;
 	extern Hook console;
 
+	void ToggleRecoil(bool toggle);
 	bool Detour32(BYTE* src, BYTE* dst, int length);
 	BYTE* TrampHook32(BYTE* src, BYTE* dst, int length);
 }

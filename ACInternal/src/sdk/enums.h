@@ -1,6 +1,8 @@
 #pragma once
 
-enum class MovementFlags : int32_t
+#include "sdk.h"
+
+enum class SDK::MovementFlags : int32_t
 {
 	Forward = 1,
 	Back = 255,
@@ -11,14 +13,14 @@ enum class MovementFlags : int32_t
 	Ghost = 327680
 };
 
-enum class Team : int32_t
+enum class SDK::Team : int32_t
 {
 	CLA = 0,
 	RVSF = 1,
 	Spectate = 5
 };
 
-enum class Status : int32_t
+enum class SDK::Status : int32_t
 {
 	Alive = 0,
 	Dead = 1,
@@ -26,7 +28,7 @@ enum class Status : int32_t
 };
 
 
-enum class GameMode : int32_t
+enum class SDK::GameMode : int32_t
 {
 	TeamDeathmatch,
 	Coop,

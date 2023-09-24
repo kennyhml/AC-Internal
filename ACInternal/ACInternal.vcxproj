@@ -159,13 +159,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\enums.h" />
+    <ClInclude Include="src\sdk\enums.h" />
     <ClInclude Include="src\geometry.h" />
     <ClInclude Include="src\hooks\hook.h" />
-    <ClInclude Include="src\player.h" />
+    <ClInclude Include="src\sdk\sdk.h" />
     <ClInclude Include="src\settings.h" />
     <ClInclude Include="src\tools\mem.h" />
-    <ClInclude Include="src\weapon.h" />
+    <ClInclude Include="src\sdk\weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp" />
@@ -175,11 +175,12 @@
     <ClCompile Include="src\hooks\headshot.cpp" />
     <ClCompile Include="src\hooks\health.cpp" />
     <ClCompile Include="src\hooks\hook.cpp" />
-    <ClCompile Include="src\hooks\rapidfire.cpp" />
-    <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\hooks\fire.cpp" />
+    <ClCompile Include="src\hooks\recoil.cpp" />
+    <ClCompile Include="src\sdk\player.cpp" />
+    <ClCompile Include="src\sdk\player.h" />
     <ClCompile Include="src\settings.cpp" />
     <ClCompile Include="src\tools\mem.cpp" />
-    <ClCompile Include="src\weapon.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
