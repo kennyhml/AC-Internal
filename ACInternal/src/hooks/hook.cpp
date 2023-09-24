@@ -18,7 +18,6 @@ hooks::Hook::Hook(const char* exportName, const char* moduleName, BYTE* dst, BYT
 	this->src = (BYTE*)exportAddr;
 }
 
-
 void hooks::Hook::Enable()
 {
 	if (isHooked) { return; }
@@ -32,8 +31,8 @@ void hooks::Hook::Disable()
 {
 	if (!isHooked) { return; }
 	Patch(src, stolenBytesBuffer, size);
-	Sleep(50);
-	bool freed = VirtualFree((BYTE*)*(uintptr_t*)gatewayPointer, 0, MEM_RELEASE);
+	Sleep(10);
+	VirtualFree((BYTE*)*(uintptr_t*)gatewayPointer, 0, MEM_RELEASE);
 	isHooked = false;
 }
 

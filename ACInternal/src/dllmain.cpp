@@ -33,14 +33,13 @@ bool eject = false;
  */
 BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 {
-	uintptr_t modBaseAddress = GetMBA();
-	Player* localPlayer = (Player*)*(uintptr_t*)(modBaseAddress + 0x10F4F4);
+	Player* localPlayer = (Player*)*(uintptr_t*)(GetMBA() + 0x10F4F4);
 
 	if (GetAsyncKeyState(VK_DELETE) & 1) {
 		eject = true;
 		if (settings::player::godMode) { hooks::health.Disable(); }
 		if (settings::weapon::alwaysHeadshot) { hooks::headshot.Disable(); }
-		if (settings::weapon::noRecoil) { ToggleRecoil(false, modBaseAddress); }
+		if (settings::weapon::noRecoil) { ToggleRecoil(false); }
 		if (settings::weapon::rapidFire) { hooks::rapidFire.Disable(); }
 		if (settings::weapon::infiniteAmmo) { hooks::ammo.Disable(); }
 	}
@@ -60,7 +59,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_F4) & 1) {
 		settings::weapon::noRecoil = !settings::weapon::noRecoil;
 		hkPrintAll(settings::weapon::noRecoil ? "<No Recoil \f0[ON]\f5!>" : "<No Recoil \f3[OFF]\f5!>");
-		ToggleRecoil(settings::weapon::noRecoil, modBaseAddress);
+		ToggleRecoil(settings::weapon::noRecoil);
 	}
 
 	if (GetAsyncKeyState(VK_F5) & 1) {
@@ -76,58 +75,6 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	}
 
 	return wglSwapBuffersGateway(hDc);
-}
-
-
-uintptr_t consoleHookGateway;
-char* string;
-char resultStr[256];
-char* found;
-void __declspec(naked) consoleHook()
-{
-	uintptr_t stringAddr;
-	uintptr_t oldEcx;
-
-	__asm {
-		mov oldEcx, ecx
-		mov stringAddr, ecx
-	}
-
-	string = (char*)(stringAddr);
-	found = strstr(string, "headshot");
-
-	if (found) {
-		size_t startPos = found - string;
-		strncpy_s(resultStr, string, startPos);
-		resultStr[startPos] = '\0';
-		strcat_s(resultStr, "fucked");
-		strcat_s(resultStr, found + strlen("headshot"));
-		oldEcx = (uintptr_t)resultStr;
-	}
-
-	__asm {
-		mov ecx, oldEcx
-		jmp[consoleHookGateway]
-	}
-}
-
-
-void hookIngameConsole(bool hook)
-{
-
-	if (hook)
-	{
-		consoleHookGateway = (uintptr_t)hooks::TrampHook32((BYTE*)GetMBA() + 0x911B, (BYTE*)consoleHook, 8);
-		std::cout << "[+] Ingame console hooked. Gateway at 0x" << std::uppercase << std::hex << consoleHookGateway << std::endl;
-	}
-	else
-	{
-		Patch((BYTE*)GetMBA() + 0x911B, (BYTE*)"\xC6\x84\x24\x03\x01\x00\x00\x00", 8);
-		Sleep(20);
-		Nop((BYTE*)consoleHookGateway, 10);
-		bool freed = VirtualFree((BYTE*)consoleHookGateway, 0, MEM_RELEASE);
-		std::cout << "[+] Ingame console unhooked. VirualFree: " << (freed ? "Success" : "Failure") << std::endl;
-	}
 }
 
 DWORD WINAPI HackThread(HMODULE hModule)
@@ -149,15 +96,17 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	auto swapBuffersHook = hooks::Hook("wglSwapBuffers", "opengl32.dll", (BYTE*)hkwglSwapBuffers, (BYTE*)&wglSwapBuffersGateway, 5);
 
 	swapBuffersHook.Enable();
+	hooks::console.Enable();
 	std::cout << "[+] Gateway at 0x" << std::uppercase << std::hex << wglSwapBuffersGateway << std::endl;
 
 	while (!eject) { Sleep(100); }
 	std::cout << "[+] Ejecting!" << std::endl;
 
 	swapBuffersHook.Disable();
+	hooks::console.Disable();
 
 	if (f) { fclose(f); }
-	Sleep(500);
+	Sleep(200);
 	FreeConsole();
 	hkPrintAll("\f0<Ejected successfully!>");
 

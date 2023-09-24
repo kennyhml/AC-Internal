@@ -46,4 +46,4 @@ struct WeaponData
 	bool isAutomatic; //0x0128
 };
 
-void ToggleRecoil(bool toggle, uintptr_t modBaseAddr);
+void ToggleRecoil(bool toggle);
