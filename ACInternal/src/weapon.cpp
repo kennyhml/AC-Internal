@@ -66,41 +66,6 @@ void __declspec(naked) fireCooldownHook()
 	}
 }
 
-/**
- * Hooks the instructions that are responsible for decreasing our ammo count.
- *
- * Detailed rundown:
- *
- *		mov esi, [esi + 14]   <<< Load the ammo count at [esi + 14] into esi
- *		dec [esi]			  <<< Decrement esi to remove 1 bullet
- *
- * Considerations:
- *
- * Just NOPing the dec instruction would work, but apply to every other entity in the
- * game as well meaning everyone will have infinite ammo. To prevent this our hook
- * has to check whether the person who fired is our local player and if it is then
- * add 1 to esi before the dec is called
- */
-uintptr_t ammoHookGateway;
-void __declspec(naked) ammoHook()
-{
-	__asm {
-		mov eax, [esi + 0x8]
-		mov whoFired, eax
-	}
-
-	if (whoFired == localPlayerAddr)
-	{
-		__asm {
-			mov eax, [esi + 0x14]
-			inc[eax]
-		}
-	}
-	__asm {
-		jmp[ammoHookGateway];
-	}
-}
-
 void ToggleAlwaysHeadshot(bool toggle, uintptr_t modBaseAddr)
 {
 	uintptr_t headshotCheckAddr = modBaseAddr + 0x61755;
@@ -143,24 +108,6 @@ void ToggleRapidFire(bool toggle, uintptr_t modBaseAddr, uintptr_t localPlayerAd
 		Sleep(5);
 		Nop((BYTE*)cooldownHookGateway, 10);
 		VirtualFree((BYTE*)cooldownHookGateway, 0, MEM_RELEASE);
-	}
-}
-
-void ToggleInfiniteAmmo(bool toggle, uintptr_t modBaseAddr, uintptr_t localPlayerAddress)
-{
-	uintptr_t ammoAddr = modBaseAddr + 0x637E6;
-
-	if (toggle)
-	{
-		localPlayerAddr = localPlayerAddress;
-		ammoHookGateway = (uintptr_t)hooks::TrampHook32((BYTE*)ammoAddr, (BYTE*)ammoHook, 5);
-	}
-	else
-	{
-		Patch((BYTE*)ammoAddr, (BYTE*)"\x8B\x76\x14\xFF\x0E", 5);
-		Sleep(5);
-		Nop((BYTE*)ammoHookGateway, 10);
-		VirtualFree((BYTE*)ammoHookGateway, 0, MEM_RELEASE);
 	}
 }
 

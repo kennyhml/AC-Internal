@@ -28,7 +28,7 @@ namespace hooks
 	};
 
 	extern Hook health;
-	extern Hook 
+	extern Hook ammo;
 
 	bool Detour32(BYTE* src, BYTE* dst, int length);
 	BYTE* TrampHook32(BYTE* src, BYTE* dst, int length);

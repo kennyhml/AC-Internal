@@ -38,17 +38,17 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 
 	if (GetAsyncKeyState(VK_DELETE) & 1) {
 		eject = true;
-		// if (settings::player::godMode) { hooks::health.Disable(); }
+		if (settings::player::godMode) { hooks::health.Disable(); }
 		if (settings::weapon::alwaysHeadshot) { ToggleAlwaysHeadshot(false, modBaseAddress); }
 		if (settings::weapon::noRecoil) { ToggleRecoil(false, modBaseAddress); }
 		if (settings::weapon::rapidFire) { ToggleRapidFire(false, modBaseAddress, (uintptr_t)localPlayer); }
-		if (settings::weapon::infiniteAmmo) { ToggleInfiniteAmmo(false, modBaseAddress, (uintptr_t)localPlayer); }
+		if (settings::weapon::infiniteAmmo) { hooks::ammo.Disable(); }
 	}
 
 	if (GetAsyncKeyState(VK_F2) & 1) {
 		settings::player::godMode = !settings::player::godMode;
 		hkPrintAll(settings::player::godMode ? "<Godmode \f0[ON]\f5!>" : "<Godmode \f3[OFF]\f5!>");
-		// hooks::health.Toggle();
+		hooks::health.Toggle();
 	}
 
 	if (GetAsyncKeyState(VK_F3) & 1) {
@@ -72,7 +72,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_F6) & 1) {
 		settings::weapon::infiniteAmmo = !settings::weapon::infiniteAmmo;
 		hkPrintAll(settings::weapon::infiniteAmmo ? "<Inf. Ammo \f0[ON]\f5!>" : "<Inf. Ammo \f3[OFF]\f5!>");
-		ToggleInfiniteAmmo(settings::weapon::infiniteAmmo, modBaseAddress, (uintptr_t)localPlayer);
+		hooks::ammo.Toggle();
 	}
 
 	return wglSwapBuffersGateway(hDc);
@@ -146,7 +146,6 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 	Player* localPlayer = (Player*)*(uintptr_t*)(modBaseAddress + 0x10F4F4);
 	hooks::localPlayerAddress = (uintptr_t)localPlayer;
-
 	auto swapBuffersHook = hooks::Hook("wglSwapBuffers", "opengl32.dll", (BYTE*)hkwglSwapBuffers, (BYTE*)&wglSwapBuffersGateway, 5);
 
 	swapBuffersHook.Enable();
