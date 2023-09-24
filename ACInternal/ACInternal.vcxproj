@@ -171,6 +171,7 @@
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\geometry.cpp" />
     <ClCompile Include="src\hooks\ammo.cpp" />
+    <ClCompile Include="src\hooks\headshot.cpp" />
     <ClCompile Include="src\hooks\health.cpp" />
     <ClCompile Include="src\hooks\hook.cpp" />
     <ClCompile Include="src\player.cpp" />

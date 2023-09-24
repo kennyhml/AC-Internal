@@ -46,6 +46,5 @@ struct WeaponData
 	bool isAutomatic; //0x0128
 };
 
-void ToggleAlwaysHeadshot(bool toggle, uintptr_t modBaseAddr);
 void ToggleRecoil(bool toggle, uintptr_t modBaseAddr);
 void ToggleRapidFire(bool toggle, uintptr_t modBaseAddr, uintptr_t localPlayerAddr);

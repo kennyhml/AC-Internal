@@ -32,7 +32,7 @@ void hooks::Hook::Disable()
 {
 	if (!isHooked) { return; }
 	Patch(src, stolenBytesBuffer, size);
-	Sleep(30);
+	Sleep(10);
 	bool freed = VirtualFree((BYTE*)*(uintptr_t*)gatewayPointer, 0, MEM_RELEASE);
 	isHooked = false;
 }

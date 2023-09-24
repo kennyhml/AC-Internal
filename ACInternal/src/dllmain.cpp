@@ -39,7 +39,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_DELETE) & 1) {
 		eject = true;
 		if (settings::player::godMode) { hooks::health.Disable(); }
-		if (settings::weapon::alwaysHeadshot) { ToggleAlwaysHeadshot(false, modBaseAddress); }
+		if (settings::weapon::alwaysHeadshot) { hooks::headshot.Disable(); }
 		if (settings::weapon::noRecoil) { ToggleRecoil(false, modBaseAddress); }
 		if (settings::weapon::rapidFire) { ToggleRapidFire(false, modBaseAddress, (uintptr_t)localPlayer); }
 		if (settings::weapon::infiniteAmmo) { hooks::ammo.Disable(); }
@@ -54,7 +54,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_F3) & 1) {
 		settings::weapon::alwaysHeadshot = !settings::weapon::alwaysHeadshot;
 		hkPrintAll(settings::weapon::alwaysHeadshot ? "<Headshots \f0[ON]\f5!>" : "<Headshots \f3[OFF]\f5!>");
-		ToggleAlwaysHeadshot(settings::weapon::alwaysHeadshot, modBaseAddress);
+		hooks::headshot.Enable();
 	}
 
 	if (GetAsyncKeyState(VK_F4) & 1) {
@@ -157,8 +157,10 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	swapBuffersHook.Disable();
 
 	if (f) { fclose(f); }
+	Sleep(500);
 	FreeConsole();
 	hkPrintAll("\f0<Ejected successfully!>");
+
 
 	FreeLibraryAndExitThread(hModule, 0);
 	return 0;

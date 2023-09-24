@@ -20,7 +20,8 @@ namespace hooks
 	 */
 	static uintptr_t gateway;
 	static uintptr_t whoFired;
-	void __declspec(naked) ammoHook()
+
+	static void __declspec(naked) ammoHook()
 	{
 		__asm {
 			mov eax, [esi + 0x8]
