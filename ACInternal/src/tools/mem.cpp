@@ -49,10 +49,10 @@ uintptr_t FindDMAAddy(uintptr_t ptr, std::vector<unsigned int> offsets)
 	return addr;
 }
 
-static uintptr_t modBaseAddr = -1;
+uintptr_t modBaseAddr = 0;
 uintptr_t GetMBA()
 {
-	if (modBaseAddr != -1) { return modBaseAddr; }
+	if (modBaseAddr != 0) { return modBaseAddr; }
 	modBaseAddr = (uintptr_t)GetModuleHandle(L"ac_client.exe");
 	return modBaseAddr;
 
