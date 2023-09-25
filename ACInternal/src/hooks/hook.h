@@ -52,6 +52,8 @@ namespace hooks
 
 	extern Patcher noRecoil;
 
+	void ToggleSpeed(bool toggle);
+
 	bool Detour32(BYTE* src, BYTE* dst, int length);
 	BYTE* TrampHook32(BYTE* src, BYTE* dst, int length);
 }

@@ -5,11 +5,12 @@ namespace settings
 {
 	namespace player
 	{
-		int speed = false;
+		int speed = 3;
 		bool godMode = false;
 		bool antiGravity = false;
 		bool flyHack = false;
 		bool ghostMode = false;
+		bool bSpeed = false;
 	}
 	namespace weapon
 	{

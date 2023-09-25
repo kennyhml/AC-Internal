@@ -177,6 +177,7 @@
     <ClCompile Include="src\hooks\hook.cpp" />
     <ClCompile Include="src\hooks\fire.cpp" />
     <ClCompile Include="src\hooks\recoil.cpp" />
+    <ClCompile Include="src\hooks\speed.cpp" />
     <ClCompile Include="src\sdk\message.cpp" />
     <ClCompile Include="src\sdk\player.cpp" />
     <ClCompile Include="src\sdk\player.h" />

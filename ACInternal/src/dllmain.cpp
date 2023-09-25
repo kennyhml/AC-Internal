@@ -30,6 +30,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		if (settings::weapon::noRecoil) { hooks::noRecoil.Disable(); }
 		if (settings::weapon::rapidFire) { hooks::rapidFire.Disable(); }
 		if (settings::weapon::infiniteAmmo) { hooks::ammo.Disable(); }
+		if (settings::player::bSpeed) { hooks::ToggleSpeed(false); }
 	}
 
 	if (GetAsyncKeyState(VK_F2) & 1) {
@@ -60,6 +61,12 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		settings::weapon::infiniteAmmo = !settings::weapon::infiniteAmmo;
 		SDK::sendAllMessage(settings::weapon::infiniteAmmo ? "<Inf. Ammo \f0[ON]\f5!>" : "<Inf. Ammo \f3[OFF]\f5!>");
 		hooks::ammo.Toggle();
+	}
+
+	if (GetAsyncKeyState(VK_F7) & 1) {
+		settings::player::bSpeed = !settings::player::bSpeed;
+		SDK::sendAllMessage(settings::player::bSpeed ? "<Speed \f0[ON]\f5!>" : "<Speed \f3[OFF]\f5!>");
+		hooks::ToggleSpeed(settings::player::bSpeed);
 	}
 
 	return wglSwapBuffersGateway(hDc);
