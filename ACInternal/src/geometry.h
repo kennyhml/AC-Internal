@@ -23,6 +23,13 @@ struct Vector3
 	}
 };
 
+
+struct Rect
+{
+	float x, y, w, h;
+};
+
+
 struct Vector2
 {
 	float x, y;

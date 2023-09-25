@@ -20,7 +20,7 @@ namespace hooks
 
 	static Hook GetHeadshotHook()
 	{
-		uintptr_t targetAddress = GetMBA() + 0x61755;
+		uintptr_t targetAddress = data::moduleBaseAddress + 0x61755;
 		return Hook((BYTE*)targetAddress, (BYTE*)headshotHook, (BYTE*)&gateway, 5);
 	}
 

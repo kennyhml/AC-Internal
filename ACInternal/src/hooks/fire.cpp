@@ -49,7 +49,7 @@ namespace hooks
 
 	static Hook GetRapidFireHook()
 	{
-		uintptr_t targetAddress = GetMBA() + 0x637E1;
+		uintptr_t targetAddress = data::moduleBaseAddress + 0x637E1;
 		return Hook((BYTE*)targetAddress, (BYTE*)fireHook, (BYTE*)&gateway, 5);
 	}
 

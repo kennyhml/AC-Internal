@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <iostream>
 #include "../tools/mem.h"
+#include "../data.h"
 
 namespace hooks
 {

@@ -159,6 +159,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\data.h" />
+    <ClInclude Include="src\glText.h" />
+    <ClInclude Include="src\glDraw.h" />
     <ClInclude Include="src\sdk\enums.h" />
     <ClInclude Include="src\geometry.h" />
     <ClInclude Include="src\hooks\hook.h" />
@@ -168,6 +171,9 @@
     <ClInclude Include="src\sdk\weapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\data.cpp" />
+    <ClCompile Include="src\glText.cpp" />
+    <ClCompile Include="src\glDraw.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\geometry.cpp" />
     <ClCompile Include="src\hooks\ammo.cpp" />

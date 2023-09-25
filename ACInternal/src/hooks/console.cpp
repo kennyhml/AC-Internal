@@ -2,17 +2,16 @@
 
 namespace hooks
 {
+	uintptr_t gateway;
+	char* string;
+	char* found;
+	char resultStr[256];
 
-	static uintptr_t gateway;
-	static char* string;
-	static char* found;
-	static char resultStr[256];
+	uintptr_t stringAddr;
+	uintptr_t oldEcx;
 
-	static void __declspec(naked) consoleHook()
+	void __declspec(naked) consoleHook()
 	{
-		uintptr_t stringAddr;
-		uintptr_t oldEcx;
-
 		__asm {
 			mov oldEcx, ecx
 			mov stringAddr, ecx
@@ -36,9 +35,9 @@ namespace hooks
 		}
 	}
 
-	static Hook GetConsoleHook()
+	Hook GetConsoleHook()
 	{
-		uintptr_t targetAddress = GetMBA() + 0x911B;
+		uintptr_t targetAddress = data::moduleBaseAddress + 0x911B;
 		return Hook((BYTE*)targetAddress, (BYTE*)consoleHook, (BYTE*)&gateway, 8);
 	}
 

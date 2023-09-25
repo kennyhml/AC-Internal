@@ -22,9 +22,8 @@ namespace hooks
 
 	static hooks::Hook getHealthHook()
 	{
-		uintptr_t moduleBaseAddr = GetMBA();
-		uintptr_t targetAddr = moduleBaseAddr + 0x29D1D;
-		myHealthEbx = *(uintptr_t*)(moduleBaseAddr + 0x10F4F4) + 0xF4;
+		uintptr_t targetAddr = data::moduleBaseAddress + 0x29D1D;
+		myHealthEbx = *(uintptr_t*)(data::moduleBaseAddress + 0x10F4F4) + 0xF4;
 
 		hooks::Hook health = hooks::Hook((BYTE*)targetAddr, (BYTE*)healthHook, (BYTE*)&gateway, 5);
 		return health;
