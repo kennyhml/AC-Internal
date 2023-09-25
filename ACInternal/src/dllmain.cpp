@@ -167,6 +167,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	while (!eject) { Sleep(100); }
 	std::cout << "[+] Ejecting!" << std::endl;
 
+	Sleep(100);
 	swapBuffersHook.Disable();
 	hooks::console.Disable();
 
