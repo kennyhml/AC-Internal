@@ -2,7 +2,6 @@
 
 namespace settings
 {
-
 	namespace player
 	{
 		extern int speed;
@@ -10,6 +9,7 @@ namespace settings
 		extern bool antiGravity;
 		extern bool flyHack;
 		extern bool ghostMode;
+		extern bool bSpeed;
 	}
 
 	namespace weapon

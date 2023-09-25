@@ -27,13 +27,31 @@ namespace hooks
 		void Toggle();
 	};
 
+	struct Patcher
+	{
+		Patcher(BYTE* src, BYTE* dst, int size);
+
+		bool isPatched{ false };
+		BYTE* src{ nullptr };
+		BYTE* dst{ nullptr };
+
+		int size{ 0 };
+
+		BYTE stolenBytesBuffer[10]{ 0 };
+
+		void Enable();
+		void Disable();
+		void Toggle();
+	};
+
 	extern Hook health;
 	extern Hook ammo;
 	extern Hook headshot;
 	extern Hook rapidFire;
 	extern Hook console;
 
-	void ToggleRecoil(bool toggle);
+	extern Patcher noRecoil;
+
 	bool Detour32(BYTE* src, BYTE* dst, int length);
 	BYTE* TrampHook32(BYTE* src, BYTE* dst, int length);
 }

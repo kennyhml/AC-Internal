@@ -27,7 +27,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		eject = true;
 		if (settings::player::godMode) { hooks::health.Disable(); }
 		if (settings::weapon::alwaysHeadshot) { hooks::headshot.Disable(); }
-		if (settings::weapon::noRecoil) { hooks::ToggleRecoil(false); }
+		if (settings::weapon::noRecoil) { hooks::noRecoil.Disable(); }
 		if (settings::weapon::rapidFire) { hooks::rapidFire.Disable(); }
 		if (settings::weapon::infiniteAmmo) { hooks::ammo.Disable(); }
 	}
@@ -47,7 +47,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (GetAsyncKeyState(VK_F4) & 1) {
 		settings::weapon::noRecoil = !settings::weapon::noRecoil;
 		SDK::sendAllMessage(settings::weapon::noRecoil ? "<No Recoil \f0[ON]\f5!>" : "<No Recoil \f3[OFF]\f5!>");
-		hooks::ToggleRecoil(settings::weapon::noRecoil);
+		hooks::noRecoil.Toggle();
 	}
 
 	if (GetAsyncKeyState(VK_F5) & 1) {

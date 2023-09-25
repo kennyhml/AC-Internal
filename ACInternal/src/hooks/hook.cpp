@@ -41,6 +41,29 @@ void hooks::Hook::Toggle()
 	isHooked ? Disable() : Enable();
 }
 
+hooks::Patcher::Patcher(BYTE* src, BYTE* dst, int size)
+	: src(src), dst(dst), size(size) {};
+
+void hooks::Patcher::Enable()
+{
+	if (isPatched) { return; }
+	Patch(stolenBytesBuffer, dst, size);
+	Patch(dst, src, size);
+	isPatched = true;
+}
+
+void hooks::Patcher::Disable()
+{
+	if (!isPatched) { return; }
+	Patch(dst, stolenBytesBuffer, size);
+	isPatched = false;
+}
+
+void hooks::Patcher::Toggle()
+{
+	isPatched ? Disable() : Enable();
+}
+
 bool hooks::Detour32(BYTE* src, BYTE* dst, int length)
 {
 	// A JMP instruction (E9) is one byte, in a 32-bit process an address is
