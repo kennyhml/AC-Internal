@@ -5,83 +5,13 @@
 #include "hooks/hook.h"
 #include <iostream>
 #include <TlHelp32.h>
-#include "glDraw.h"
-#include "glText.h"
 #include "data.h"
 #include "sdk/player.h"
-
+#include "esp.h"
 
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
 twglSwapBuffers wglSwapBuffersGateway;
 bool eject = false;
-
-GL::Font glFont;
-const int FONT_HEIGHT = 15;
-const int FONT_WIDTH = 9;
-
-
-const char* example = "ESP box";
-const char* example2 = "Hello world";
-
-std::vector<SDK::Player*> LoadPlayers()
-{
-
-	uint32_t count = *(uintptr_t*)(data::moduleBaseAddress + 0x10F500);
-	std::vector<SDK::Player*> players;
-	players.reserve(count);
-
-	uintptr_t entityList = *(uintptr_t*)(data::moduleBaseAddress + 0x10F4F8);
-
-	for (int i = 1; i < count; i++)
-	{
-		int offset = 4 * i;
-		players.push_back((SDK::Player*)*(uintptr_t*)(entityList + offset));
-	}
-	return players;
-}
-
-void DrawPlayer(SDK::Player* player, SDK::Player* localPlayer, float matrix[16])
-{
-	if (!player->isAlive()) { return; }
-
-	Vector2 position;
-
-	if (!WorldToScreen(player->feetPos, position, matrix, data::gameRect.right, data::gameRect.bottom)) { return; }
-
-
-	int distance = (int)GetDistance(localPlayer->headPos, player->headPos);
-	int rectWidth = 1100 / distance;
-	int rectHeight = 2000 / distance;
-
-	// calculate the topleft position of our bounding rectangle
-	int x = position.x - (rectWidth / 2);
-	int y = position.y - rectHeight;
-
-	GL::DrawOutline(x, y, rectWidth, rectHeight, 2.f, rgb::red);
-}
-
-void Draw()
-{
-	HDC currHDC = wglGetCurrentDC();
-	if (!glFont.built || currHDC != glFont.hdc)
-	{
-		glFont.Build(FONT_HEIGHT);
-	}
-
-	GL::SetupOrtho();
-
-	SDK::Player* localPlayer = (SDK::Player*)*(uintptr_t*)(data::moduleBaseAddress + 0x10F4F4);
-
-	float matrix[16];
-	memcpy((BYTE*)matrix, (BYTE*)(data::moduleBaseAddress + 0x101AE8), sizeof(matrix));
-
-	for (SDK::Player* player : LoadPlayers())
-	{
-		DrawPlayer(player, localPlayer, matrix);
-	}
-
-	GL::RestoreGL();
-}
 
 /**
  * @brief wglSwapBuffers hook function to execute our cheats code as the
@@ -142,7 +72,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		hooks::ToggleSpeed(settings::player::bSpeed);
 	}
 
-	Draw();
+	esp::Draw();
 
 	return wglSwapBuffersGateway(hDc);
 }

@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <gl/GL.h>
-#include "tools/mem.h"
+#include "../tools/mem.h"
 
 namespace rgb
 {
@@ -17,11 +17,12 @@ namespace rgb
 
 namespace GL
 {
+	inline GLint viewport[4];
 
 	void SetupOrtho();
 	void RestoreGL();
 
 	void DrawFilledRect(float x, float y, float width, float height, const GLubyte color[3]);
 	void DrawOutline(float x, float y, float width, float height, float lineWidth, const GLubyte color[3]);
-
+	void DrawLine(float x, float y, float x2, float y2, float lineWidth, const GLubyte color[3]);
 }
