@@ -1,27 +1,19 @@
 #include "tools/mem.h"
 #include "sdk/sdk.h"
 #include "settings.h"
-#include <windows.h>
 #include "hooks/hook.h"
-#include <iostream>
-#include <TlHelp32.h>
 #include "data.h"
 #include "sdk/player.h"
 #include "esp.h"
+#include "aimbot.h"
+#include <windows.h>
+#include <iostream>
+#include <TlHelp32.h>
 
 typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
 twglSwapBuffers wglSwapBuffersGateway;
 bool eject = false;
 
-/**
- * @brief wglSwapBuffers hook function to execute our cheats code as the
- * function gets executed once every frame.
- *
- * A trampoline hook is placed in the original flo of the function which jumps
- * to this function, after we finished our execution we pass execution on to our
- * gateway which will execute the bytes we originally stole and then jump back
- * to the appropriate location in the original function.
- */
 BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 {
 	SDK::Player* localPlayer = (SDK::Player*)*(uintptr_t*)(data::moduleBaseAddress + 0x10F4F4);
@@ -34,6 +26,11 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		if (settings::weapon::rapidFire) { hooks::rapidFire.Disable(); }
 		if (settings::weapon::infiniteAmmo) { hooks::ammo.Disable(); }
 		if (settings::player::bSpeed) { hooks::ToggleSpeed(false); }
+	}
+
+	if (GetAsyncKeyState(VK_F1) & 1) {
+		settings::esp::enabled = !settings::esp::enabled;
+		SDK::sendAllMessage(settings::esp::enabled ? "<ESP \f0[ON]\f5!>" : "<ESP \f3[OFF]\f5!>");
 	}
 
 	if (GetAsyncKeyState(VK_F2) & 1) {
@@ -72,7 +69,24 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		hooks::ToggleSpeed(settings::player::bSpeed);
 	}
 
-	esp::Draw();
+	if (GetAsyncKeyState(VK_F9) & 1) {
+		int32_t playerCount = *(uintptr_t*)(data::moduleBaseAddress + 0x10F500);
+		uintptr_t entityList = *(uintptr_t*)(data::moduleBaseAddress + 0x10F4F8);
+
+		for (int i = 1; i < playerCount; i++)
+		{
+			int offset = 4 * i;
+			((SDK::Player*)*(uintptr_t*)(entityList + offset))->characterSpeed = 0.001f;
+		}
+	}
+
+	if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
+		aimbot::TargetClosest();
+	}
+
+	if (settings::esp::enabled) {
+		esp::DrawAllPlayers();
+	}
 
 	return wglSwapBuffersGateway(hDc);
 }
@@ -105,7 +119,6 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	Sleep(200);
 	FreeConsole();
 	SDK::sendAllMessage("\f0<Ejected successfully!>");
-
 
 	FreeLibraryAndExitThread(hModule, 0);
 	return 0;

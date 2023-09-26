@@ -1,6 +1,5 @@
 #include "glDraw.h"
 
-
 void GL::SetupOrtho()
 {
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -23,6 +22,11 @@ void GL::RestoreGL()
 	glPopAttrib();
 }
 
+void GL::DrawFilledRect(Rect box, const GLubyte color[3])
+{
+	GL::DrawFilledRect(box.x, box.y, box.w, box.h, color);
+}
+
 void GL::DrawFilledRect(float x, float y, float width, float height, const GLubyte color[3])
 {
 	glColor3ub(color[0], color[1], color[2]);
@@ -33,6 +37,12 @@ void GL::DrawFilledRect(float x, float y, float width, float height, const GLuby
 	glVertex2f(x, y + height);
 	glEnd();
 }
+
+void GL::DrawOutline(Rect box, float lineWidth, const GLubyte color[3])
+{
+	GL::DrawOutline(box.x, box.y, box.w, box.h, lineWidth, color);
+}
+
 
 void GL::DrawOutline(float x, float y, float width, float height, float lineWidth, const GLubyte color[3])
 {
@@ -56,6 +66,25 @@ void GL::DrawLine(float x, float y, float x2, float y2, float lineWidth, const G
 
 	glVertex2f(x, y);
 	glVertex2f(x2, y2);
+
+	glEnd();
+}
+
+void GL::DrawCircle(float centerX, float centerY, float radius, int numSegments, float lineWidth, const GLubyte color[3])
+{
+	glLineWidth(lineWidth);
+	glColor3ub(color[0], color[1], color[2]);
+
+	glBegin(GL_LINE_LOOP);
+
+	for (int i = 0; i < numSegments; i++) {
+		float theta = 2.0f * 3.1415926f * float(i) / float(numSegments);
+
+		float x = radius * cosf(theta);
+		float y = radius * sinf(theta);
+
+		glVertex2f(centerX + x, centerY + y);
+	}
 
 	glEnd();
 }

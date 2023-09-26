@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\aimbot.h" />
     <ClInclude Include="src\esp.h" />
     <ClInclude Include="src\data.h" />
     <ClInclude Include="src\gl\glText.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="src\sdk\weapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\aimbot.cpp" />
     <ClCompile Include="src\esp.cpp" />
     <ClCompile Include="src\data.cpp" />
     <ClCompile Include="src\gl\glText.cpp" />

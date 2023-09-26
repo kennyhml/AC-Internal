@@ -48,6 +48,9 @@
     <ClInclude Include="src\esp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\aimbot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -105,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\esp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\aimbot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

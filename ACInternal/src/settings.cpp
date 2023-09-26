@@ -19,4 +19,24 @@ namespace settings
 		bool rapidFire = false;
 		bool infiniteAmmo = false;
 	}
+
+	namespace esp
+	{
+		bool enabled = true;
+		bool displayName = true;
+		bool displayArmor = true;
+		bool displayHealth = true;
+		bool displayWeapon = true;
+		bool displayDistance = true;
+		bool displayLine = true;
+		int maxRenderDistance = 200;
+	}
+
+	namespace aimbot
+	{
+		int radius = 30;
+		int maxDistance = 200;
+		int minDistance = 0;
+	}
+
 }

@@ -22,18 +22,21 @@ namespace settings
 
 	namespace esp
 	{
-
-
-
-
+		extern bool enabled;
+		extern bool displayName;
+		extern bool displayArmor;
+		extern bool displayHealth;
+		extern bool displayWeapon;
+		extern bool displayDistance;
+		extern bool displayLine;
+		extern int maxRenderDistance;
 	}
-
 
 	namespace aimbot
 	{
-
-
-
+		extern int radius;
+		extern int maxDistance;
+		extern int minDistance;
 	}
 
 

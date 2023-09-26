@@ -28,8 +28,7 @@ namespace hooks
 			mov whoFired, eax
 		}
 
-		if (whoFired == localPlayerAddress)
-		{
+		if (whoFired == localPlayerAddress) {
 			__asm {
 				mov eax, [esi + 0x14]
 				inc[eax]

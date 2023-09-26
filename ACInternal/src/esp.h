@@ -5,7 +5,7 @@
 namespace esp
 {
 	void DrawPlayer(SDK::Player* player, float matrix[16]);
-	void Draw();
+	void DrawAllPlayers();
 }
 
 

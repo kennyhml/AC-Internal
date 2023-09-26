@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <gl/GL.h>
 #include "../tools/mem.h"
+#include "../geometry.h"
 
 namespace rgb
 {
@@ -22,7 +23,11 @@ namespace GL
 	void SetupOrtho();
 	void RestoreGL();
 
+	void DrawFilledRect(Rect box, const GLubyte color[3]);
 	void DrawFilledRect(float x, float y, float width, float height, const GLubyte color[3]);
+	void DrawOutline(Rect box, float lineWidth, const GLubyte color[3]);
 	void DrawOutline(float x, float y, float width, float height, float lineWidth, const GLubyte color[3]);
 	void DrawLine(float x, float y, float x2, float y2, float lineWidth, const GLubyte color[3]);
+	void DrawCircle(float centerX, float centerY, float radius, int numSegments, float lineWidth, const GLubyte color[3]);
+
 }
