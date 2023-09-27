@@ -37,6 +37,8 @@ namespace settings
 		int radius = 30;
 		int maxDistance = 200;
 		int minDistance = 0;
+		bool autoFire = false;
+		bool turretMode = false;
 	}
 
 }

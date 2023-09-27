@@ -37,6 +37,8 @@ namespace settings
 		extern int radius;
 		extern int maxDistance;
 		extern int minDistance;
+		extern bool autoFire;
+		extern bool turretMode;
 	}
 
 

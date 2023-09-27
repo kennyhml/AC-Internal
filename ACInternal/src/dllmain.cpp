@@ -69,15 +69,14 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		hooks::ToggleSpeed(settings::player::bSpeed);
 	}
 
-	if (GetAsyncKeyState(VK_F9) & 1) {
-		int32_t playerCount = *(uintptr_t*)(data::moduleBaseAddress + 0x10F500);
-		uintptr_t entityList = *(uintptr_t*)(data::moduleBaseAddress + 0x10F4F8);
+	if (GetAsyncKeyState(VK_F8) & 1) {
+		settings::aimbot::autoFire = !settings::aimbot::autoFire;
+		SDK::sendAllMessage(settings::aimbot::autoFire ? "<Auto Fire \f0[ON]\f5!>" : "<Auto Fire \f3[OFF]\f5!>");
+	}
 
-		for (int i = 1; i < playerCount; i++)
-		{
-			int offset = 4 * i;
-			((SDK::Player*)*(uintptr_t*)(entityList + offset))->characterSpeed = 0.001f;
-		}
+	if (GetAsyncKeyState(VK_F9) & 1) {
+		settings::aimbot::turretMode = !settings::aimbot::turretMode;
+		SDK::sendAllMessage(settings::aimbot::turretMode ? "<Turret Mode \f0[ON]\f5!>" : "<Turret Mode \f3[OFF]\f5!>");
 	}
 
 	if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {

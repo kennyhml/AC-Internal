@@ -35,7 +35,7 @@ namespace aimbot
 
 			Vector3 viewDiff = perfectAngle - currAngle;
 
-			if (abs(viewDiff.x) > settings::aimbot::radius || abs(viewDiff.y) > settings::aimbot::radius) { continue; }
+			if (max(abs(viewDiff.x), abs(viewDiff.y)) > settings::aimbot::radius && !settings::aimbot::turretMode) { continue; }
 
 			float totalDiff = abs(viewDiff.x) + abs(viewDiff.y);
 
@@ -45,9 +45,9 @@ namespace aimbot
 				bestAngle = perfectAngle;
 			}
 		}
-		if (closestEnemy) {
-			localPlayer->viewAngle = bestAngle;
-		}
+		if (closestEnemy) { localPlayer->viewAngle = bestAngle; }
+
+		localPlayer->isShooting = settings::aimbot::autoFire && closestEnemy != nullptr;
 	}
 
 	struct traceresult_s
