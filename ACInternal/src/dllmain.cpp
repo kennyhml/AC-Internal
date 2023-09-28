@@ -79,6 +79,11 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		SDK::sendAllMessage(settings::aimbot::turretMode ? "<Turret Mode \f0[ON]\f5!>" : "<Turret Mode \f3[OFF]\f5!>");
 	}
 
+	if (GetAsyncKeyState(VK_HOME) & 1) {
+		settings::aimbot::wallhack = !settings::aimbot::wallhack;
+		SDK::sendAllMessage(settings::aimbot::wallhack ? "<Wallhack \f0[ON]\f5!>" : "<Wallhack \f3[OFF]\f5!>");
+	}
+
 	if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
 		aimbot::TargetClosest();
 	}

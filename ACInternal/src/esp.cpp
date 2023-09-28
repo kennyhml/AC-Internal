@@ -149,5 +149,6 @@ void esp::DrawAllPlayers()
 
 	GL::DrawCircle(data::gameRect.right / 2, data::gameRect.bottom / 2, settings::aimbot::radius * 3, 100, 1, rgb::green);
 	GL::RestoreGL();
+	if (settings::aimbot::wallhack) { glDisable(GL_DEPTH_TEST); }
 
 }

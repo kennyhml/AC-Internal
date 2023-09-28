@@ -39,6 +39,8 @@ namespace settings
 		int minDistance = 0;
 		bool autoFire = false;
 		bool turretMode = false;
+		bool wallhack = false;
+
 	}
 
 }
