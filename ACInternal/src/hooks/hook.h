@@ -52,6 +52,8 @@ namespace hooks
 	extern Hook console;
 
 	extern Patcher noRecoil;
+	extern Patcher mapReveal;
+	extern Patcher minimapReveal;
 
 	void ToggleSpeed(bool toggle);
 

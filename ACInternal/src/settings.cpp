@@ -30,6 +30,10 @@ namespace settings
 		bool displayDistance = true;
 		bool displayLine = true;
 		int maxRenderDistance = 200;
+
+		bool mapReveal = false;
+
+
 	}
 
 	namespace aimbot

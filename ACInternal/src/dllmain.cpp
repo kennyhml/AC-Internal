@@ -26,6 +26,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		if (settings::weapon::rapidFire) { hooks::rapidFire.Disable(); }
 		if (settings::weapon::infiniteAmmo) { hooks::ammo.Disable(); }
 		if (settings::player::bSpeed) { hooks::ToggleSpeed(false); }
+		if (settings::esp::mapReveal) { hooks::mapReveal.Toggle(), hooks::minimapReveal.Toggle(); }
 	}
 
 	if (GetAsyncKeyState(VK_F1) & 1) {
@@ -83,6 +84,13 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		settings::aimbot::wallhack = !settings::aimbot::wallhack;
 		SDK::sendAllMessage(settings::aimbot::wallhack ? "<Wallhack \f0[ON]\f5!>" : "<Wallhack \f3[OFF]\f5!>");
 	}
+
+	if (GetAsyncKeyState(VK_END) & 1) {
+		settings::esp::mapReveal = !settings::esp::mapReveal;
+		SDK::sendAllMessage(settings::esp::mapReveal ? "<Map Reveal \f0[ON]\f5!>" : "<Map Reveal \f3[OFF]\f5!>");
+		hooks::mapReveal.Toggle(), hooks::minimapReveal.Toggle();
+	}
+
 
 	if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
 		aimbot::TargetClosest();

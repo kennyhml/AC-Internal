@@ -30,6 +30,8 @@ namespace settings
 		extern bool displayDistance;
 		extern bool displayLine;
 		extern int maxRenderDistance;
+		extern bool mapReveal;
+
 	}
 
 	namespace aimbot
