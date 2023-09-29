@@ -1,17 +1,12 @@
 #include "aimbot.h"
-#include "sdk/player.h"
 #include "data.h"
 #include "geometry.h"
 #include "settings.h"
+#include "sdk/player.h"
 #include "gl/glDraw.h"
-
-
-
-
 
 namespace aimbot
 {
-
 	struct TraceLineResult
 	{
 		Vector3 end;
@@ -95,7 +90,9 @@ namespace aimbot
 		// Target only if a valid enemy was actually found
 		if (closestEnemy) { localPlayer->viewAngle = bestAngle; }
 		// Fire if auto fire is enabled and an enemy was targetted
-		localPlayer->isShooting = settings::aimbot::autoFire && closestEnemy;
+		if (settings::aimbot::autoFire) {
+			localPlayer->isShooting = settings::aimbot::autoFire && closestEnemy;
+		}
 	}
 
 }

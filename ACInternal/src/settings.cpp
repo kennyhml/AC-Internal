@@ -1,6 +1,5 @@
 #include "settings.h"
 
-
 namespace settings
 {
 	namespace player
@@ -12,6 +11,7 @@ namespace settings
 		bool ghostMode = false;
 		bool bSpeed = false;
 	}
+
 	namespace weapon
 	{
 		bool alwaysHeadshot = false;
@@ -29,11 +29,8 @@ namespace settings
 		bool displayWeapon = true;
 		bool displayDistance = true;
 		bool displayLine = true;
-		int maxRenderDistance = 200;
-
 		bool mapReveal = false;
-
-
+		int maxRenderDistance = 200;
 	}
 
 	namespace aimbot
@@ -44,7 +41,5 @@ namespace settings
 		bool autoFire = false;
 		bool turretMode = false;
 		bool wallhack = false;
-
 	}
-
 }
