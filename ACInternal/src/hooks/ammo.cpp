@@ -38,18 +38,11 @@ namespace hooks
 		}
 	}
 
-	static Hook GetAmmoHook()
-	{
-		uintptr_t targetAddress = data::moduleBaseAddress + 0x637E6;
-		return Hook((BYTE*)targetAddress, (BYTE*)ammoHook, (BYTE*)&gateway, 5);
-
-	}
-
-	Hook ammo = GetAmmoHook();
-
-
-
-
+	Hook ammo = Hook(
+		reinterpret_cast<BYTE*>(data::moduleBaseAddress + 0x637E6),
+		reinterpret_cast<BYTE*>(ammoHook),
+		reinterpret_cast<BYTE*>(&gateway),
+		5);
 }
 
 

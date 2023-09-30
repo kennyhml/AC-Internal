@@ -3,7 +3,7 @@
 namespace hooks
 {
 	static uintptr_t gateway;
-	static uintptr_t myHealthEbx;
+	static uintptr_t myHealthEbx = reinterpret_cast<uintptr_t>(data::localPlayer) + 0xF4;
 
 	static void __declspec(naked) healthHook()
 	{
@@ -20,16 +20,12 @@ namespace hooks
 		}
 	}
 
-	static hooks::Hook getHealthHook()
-	{
-		uintptr_t targetAddr = data::moduleBaseAddress + 0x29D1D;
-		myHealthEbx = *(uintptr_t*)(data::moduleBaseAddress + 0x10F4F4) + 0xF4;
+	Hook health = Hook(
+		reinterpret_cast<BYTE*>(data::moduleBaseAddress + 0x29D1D),
+		reinterpret_cast<BYTE*>(healthHook),
+		reinterpret_cast<BYTE*>(&gateway),
+		5);
 
-		hooks::Hook health = hooks::Hook((BYTE*)targetAddr, (BYTE*)healthHook, (BYTE*)&gateway, 5);
-		return health;
-	}
-
-	Hook health = getHealthHook();
 }
 
 

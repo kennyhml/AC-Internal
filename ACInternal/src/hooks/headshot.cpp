@@ -18,11 +18,9 @@ namespace hooks
 		}
 	}
 
-	static Hook GetHeadshotHook()
-	{
-		uintptr_t targetAddress = data::moduleBaseAddress + 0x61755;
-		return Hook((BYTE*)targetAddress, (BYTE*)headshotHook, (BYTE*)&gateway, 5);
-	}
-
-	Hook headshot = GetHeadshotHook();
+	Hook headshot = Hook(
+		reinterpret_cast<BYTE*>(data::moduleBaseAddress + 0x61755),
+		reinterpret_cast<BYTE*>(headshotHook),
+		reinterpret_cast<BYTE*>(&gateway),
+		5);
 }

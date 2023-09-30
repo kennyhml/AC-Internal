@@ -46,11 +46,9 @@ namespace hooks
 		}
 	}
 
-	static Hook GetRapidFireHook()
-	{
-		uintptr_t targetAddress = data::moduleBaseAddress + 0x637E1;
-		return Hook((BYTE*)targetAddress, (BYTE*)fireHook, (BYTE*)&gateway, 5);
-	}
-
-	Hook rapidFire = GetRapidFireHook();
+	Hook rapidFire = Hook(
+		reinterpret_cast<BYTE*>(data::moduleBaseAddress + 0x637E1),
+		reinterpret_cast<BYTE*>(fireHook),
+		reinterpret_cast<BYTE*>(&gateway),
+		5);
 }

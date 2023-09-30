@@ -51,5 +51,9 @@ namespace hooks
 		}
 	}
 
-	Hook console = Hook(reinterpret_cast<BYTE*>(data::moduleBaseAddress + 0x911B), reinterpret_cast<BYTE*>(consoleHook), reinterpret_cast<BYTE*>(&gateway), 8);
+	Hook console = Hook(
+		reinterpret_cast<BYTE*>(data::moduleBaseAddress + 0x911B),
+		reinterpret_cast<BYTE*>(consoleHook),
+		reinterpret_cast<BYTE*>(&gateway),
+		8);
 }
