@@ -1,6 +1,6 @@
 #include "hook.h"
-#include <stdexcept>
 #include "../tools/mem.h"
+#include <stdexcept>
 
 hooks::Hook::Hook(BYTE* src, BYTE* dst, BYTE* gatewayPointer, int size)
 	: src(src), dst(dst), gatewayPointer(gatewayPointer), size(size) {};
@@ -23,27 +23,28 @@ void hooks::Hook::Enable()
 	if (isHooked) { return; }
 
 	memcpy(stolenBytesBuffer, src, size);
-	*(uintptr_t*)gatewayPointer = (uintptr_t)TrampHook32(src, dst, size);
+	*reinterpret_cast<uintptr_t*>(gatewayPointer) = reinterpret_cast<uintptr_t>(TrampHook32(src, dst, size));
 
-	std::cout << "[*] Hook enabled for destionation at 0x" << std::uppercase << std::hex << reinterpret_cast<uintptr_t>(dst) << std::endl;
+	std::cout << "[*] Hook enabled for dst at 0x" << std::uppercase << std::hex << reinterpret_cast<uintptr_t>(dst) << std::endl;
 	std::cout << "\t[+] Gateway at 0x" << std::uppercase << std::hex << *reinterpret_cast<uintptr_t*>(gatewayPointer) << std::endl;
-	std::cout << "\t[+] Stolen bytes: ";
+	std::cout << "\t[+] Stolen bytes: [";
 	for (int i = 0; i < 10; i++)
 	{
-		std::cout << "0x" << static_cast<int>(stolenBytesBuffer[i]) << " ";
+		std::cout << "0x" << static_cast<int>(stolenBytesBuffer[i]) << (i == 9 ? "]\n" : " ");
 	}
-	std::cout << std::endl;
-
-
 	isHooked = true;
 }
 
 void hooks::Hook::Disable()
 {
 	if (!isHooked) { return; }
+
 	Patch(src, stolenBytesBuffer, size);
 	Sleep(10);
-	VirtualFree((BYTE*)*(uintptr_t*)gatewayPointer, 0, MEM_RELEASE);
+	bool freed = VirtualFree(*reinterpret_cast<BYTE**>(gatewayPointer), 0, MEM_RELEASE);
+
+	std::cout << "[*] Hook disabled for dst at 0x" << std::uppercase << std::hex << reinterpret_cast<uintptr_t>(dst) << std::endl;
+	std::cout << "\t[+] Gateway VirtualFree result: " << (freed ? "Succeeded" : "Failed") << std::endl;
 	isHooked = false;
 }
 
@@ -91,11 +92,11 @@ bool hooks::Detour32(BYTE* src, BYTE* dst, int length)
 
 	// JMP instructions use relative addresses, which means we need to find the offset from
 	// the instruction we are hooking to the address of the function we want to jump to.
-	DWORD relativeAddress = ((DWORD)dst - (DWORD)src) - 5;
+	uintptr_t relativeAddress = reinterpret_cast<uintptr_t>(dst) - reinterpret_cast<uintptr_t>(src) - 5;
 
 	// Replace the first byte with the JMP instruction, then the DWORD (bytes 2 - 5) with the address
 	*src = 0xE9;
-	*(uintptr_t*)(src + 1) = relativeAddress;
+	*reinterpret_cast<uintptr_t*>(src + 1) = relativeAddress;
 
 	VirtualProtect(src, length, oldProtect, &oldProtect);
 	return true;
@@ -119,7 +120,7 @@ BYTE* hooks::TrampHook32(BYTE* src, BYTE* dst, int length)
 
 	// jump back to the original program execution
 	*(gateway + length) = 0xE9;
-	*(uintptr_t*)(gateway + length + 1) = gatewayRelativeAddr;
+	*reinterpret_cast<uintptr_t*>(gateway + length + 1) = gatewayRelativeAddr;
 
 	Detour32(src, dst, length);
 	return gateway;
