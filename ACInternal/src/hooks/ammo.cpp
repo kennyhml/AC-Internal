@@ -2,7 +2,6 @@
 
 namespace hooks
 {
-
 	/**
 	 * Hooks the instructions that are responsible for decreasing our ammo count.
 	 *
@@ -24,14 +23,14 @@ namespace hooks
 	static void __declspec(naked) ammoHook()
 	{
 		__asm {
-			mov eax, [esi + 0x8]
-			mov whoFired, eax
+			mov eax, [esi + 0x8] // load weapon owner into tmp register
+			mov whoFired, eax // load weapon owner into whoFired
 		}
 
-		if (whoFired == localPlayerAddress) {
+		if (whoFired == reinterpret_cast<uintptr_t>(data::localPlayer)) {
 			__asm {
-				mov eax, [esi + 0x14]
-				inc[eax]
+				mov eax, [esi + 0x14] // load ammo count into tmp register
+				inc[eax] // increment the ammo count to nullify the decrement
 			}
 		}
 		__asm {

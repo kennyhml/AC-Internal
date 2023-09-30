@@ -1,5 +1,6 @@
 #include "settings.h"
 
+
 namespace settings
 {
 	namespace player

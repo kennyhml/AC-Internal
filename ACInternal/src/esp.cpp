@@ -1,12 +1,12 @@
 #include "esp.h"
 #include "data.h"
+#include "settings.h"
 #include "sdk/player.h"
 #include "sdk/weapon.h"
 #include "gl/glDraw.h"
 #include "gl/glText.h"
 #include <vector>
 #include <iostream>
-#include "settings.h"
 
 const int GAME_UNIT_MAGIC = 400;
 

@@ -40,6 +40,6 @@ namespace settings
 		extern int minDistance;
 		extern bool autoFire;
 		extern bool turretMode;
-
+		extern bool wallhack;
 	}
 }

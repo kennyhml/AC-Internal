@@ -7,8 +7,6 @@
 
 namespace hooks
 {
-	inline uintptr_t localPlayerAddress;
-
 	struct Hook
 	{
 		Hook(BYTE* src, BYTE* dst, BYTE* gatewayPointer, int size);

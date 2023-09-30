@@ -36,7 +36,7 @@ namespace hooks
 			mov whoFired, eax
 		}
 
-		if (whoFired == localPlayerAddress) {
+		if (whoFired == reinterpret_cast<uintptr_t>(data::localPlayer)) {
 			__asm {
 				mov ecx, 0
 			}

@@ -15,7 +15,7 @@ hooks::Hook::Hook(const char* exportName, const char* moduleName, BYTE* dst, BYT
 	FARPROC exportAddr = GetProcAddress(hModule, exportName);
 	if (!exportAddr) { throw std::exception((std::string("GetProcAddress failed for ") + exportName).c_str()); }
 
-	this->src = (BYTE*)exportAddr;
+	this->src = reinterpret_cast<BYTE*>(exportAddr);
 }
 
 void hooks::Hook::Enable()
@@ -25,8 +25,8 @@ void hooks::Hook::Enable()
 	memcpy(stolenBytesBuffer, src, size);
 	*(uintptr_t*)gatewayPointer = (uintptr_t)TrampHook32(src, dst, size);
 
-	std::cout << "[+] Hook enabled for destionation at " << std::uppercase << std::hex << dst << std::endl;
-	std::cout << "\t[+] Gateway at 0x" << std::uppercase << std::hex << *(uintptr_t*)gatewayPointer << std::endl;
+	std::cout << "[*] Hook enabled for destionation at 0x" << std::uppercase << std::hex << reinterpret_cast<uintptr_t>(dst) << std::endl;
+	std::cout << "\t[+] Gateway at 0x" << std::uppercase << std::hex << *reinterpret_cast<uintptr_t*>(gatewayPointer) << std::endl;
 	std::cout << "\t[+] Stolen bytes: ";
 	for (int i = 0; i < 10; i++)
 	{
