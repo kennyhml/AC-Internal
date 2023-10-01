@@ -1,9 +1,8 @@
 #pragma once
-
-#include <Windows.h>
-#include <iostream>
 #include "../tools/mem.h"
 #include "../data.h"
+#include <Windows.h>
+#include <iostream>
 
 namespace hooks
 {

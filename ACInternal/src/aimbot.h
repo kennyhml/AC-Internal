@@ -4,5 +4,5 @@
 namespace aimbot
 {
 	void TargetClosest();
-	bool IsPlayerVisible(SDK::Player* localPlayer, SDK::Player* player);
+	bool IsPlayerVisible(SDK::Player* player);
 }

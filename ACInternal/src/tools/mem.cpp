@@ -43,17 +43,13 @@ uintptr_t FindDMAAddy(uintptr_t ptr, std::vector<unsigned int> offsets)
 	uintptr_t addr = ptr;
 	for (unsigned int i = 0; i < offsets.size(); ++i)
 	{
-		addr = *(uintptr_t*)addr;
+		addr = *reinterpret_cast<uintptr_t*>(addr);
 		addr += offsets[i];
 	}
 	return addr;
 }
 
-uintptr_t modBaseAddr = 0;
 uintptr_t GetMBA()
 {
-	if (modBaseAddr != 0) { return modBaseAddr; }
-	modBaseAddr = (uintptr_t)GetModuleHandle(L"ac_client.exe");
-	return modBaseAddr;
-
+	return reinterpret_cast<uintptr_t>(GetModuleHandle(L"ac_client.exe"));
 }
