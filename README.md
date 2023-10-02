@@ -11,6 +11,7 @@ The cooler brother of [AC-External](https://github.com/kennyhml/AC-External).
 - ESP (armor, health, name, distance, weapon, ammo, team)
 - Aimbot (much faster than the external variant)
 - Wallhack (disable depth test to trick the game into thinking you can hit the target, credit to some guy on GH)
+- Thanos Snap, kills everyone on the map (credit to myself and the 4h it took me reversing the calling conventions XD)
 - Show enemy positions on the minimap and overlay map (credit to myself)
 - Weapon and hit location spoofing to get 'headshot' multiplier (credit to some guy on GH & myself)
 - Godmode (better than external variant because it doesnt just freeze the value)
