@@ -4,7 +4,6 @@
 #include <memory>
 
 
-
 namespace SDK
 {
 	typedef void(__stdcall* tServerMessage) (const char* formatString, ...);
@@ -24,5 +23,8 @@ namespace SDK
 	extern tServerMessage sendServerMessage;
 	extern tAllMessage sendAllMessage;
 	extern tPlayerMessage sendPlayerMesage;
+
+	extern void kill(Player* entity);
+
 
 }

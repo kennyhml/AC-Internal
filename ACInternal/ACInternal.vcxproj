@@ -189,6 +189,7 @@
     <ClCompile Include="src\hooks\map.cpp" />
     <ClCompile Include="src\hooks\recoil.cpp" />
     <ClCompile Include="src\hooks\speed.cpp" />
+    <ClCompile Include="src\sdk\kill.cpp" />
     <ClCompile Include="src\sdk\message.cpp" />
     <ClCompile Include="src\sdk\player.cpp" />
     <ClCompile Include="src\sdk\player.h" />
