@@ -17,6 +17,7 @@ The cooler brother of [AC-External](https://github.com/kennyhml/AC-External).
 - [Godmode][godmode] (better than external variant because it doesnt just freeze the value)
 - No Recoil, Rapid Fire, Infinite Ammo... (same as the external variant, but only applies to local player this time)
 
+Teleport to targetted entity: ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤAimbot & Wallhack (works online):
 <p float="left">
   <img src="demo/demoTeleport.gif" width="410" height="245" />
   <img src="demo/demoWallhackAimbot.gif" width="410" height="245" />
