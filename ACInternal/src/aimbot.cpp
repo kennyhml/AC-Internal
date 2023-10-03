@@ -7,43 +7,11 @@
 
 namespace aimbot
 {
-	struct TraceLineResult
-	{
-		Vector3 end;
-		bool collided;
-	};
-
-	bool IsPlayerVisible(SDK::Player* player)
-	{
-		DWORD traceLine = 0x048a310;
-		TraceLineResult traceresult;
-		traceresult.collided = false;
-		Vector3 src = data::localPlayer->headPos;
-		Vector3 dst = player->headPos;
-
-		__asm
-		{
-			push 0; bSkipTags
-			push 0; bCheckPlayers
-			push data::localPlayer
-			push src.z
-			push src.y
-			push src.x
-			push dst.z
-			push dst.y
-			push dst.x
-			lea eax, [traceresult]
-			call traceLine;
-			add esp, 36
-		}
-		return !traceresult.collided;
-	}
-
 	bool IsValidTarget(SDK::Player* entity, SDK::GameMode mode)
 	{
 		return (entity->isAlive()
 			&& entity->isEnemy(data::localPlayer->team, mode)
-			&& (IsPlayerVisible(entity) || settings::aimbot::wallhack));
+			&& (SDK::IsVisible(entity) || settings::aimbot::wallhack));
 	}
 
 	void TargetClosest()

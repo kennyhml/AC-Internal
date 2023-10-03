@@ -1,6 +1,5 @@
 #include "sdk.h"
 #include "../data.h"
-
 /**
  * @brief Calls assault cubes kill functionality to kill the given entity without conditions,
  * doesnt work online.
@@ -37,7 +36,7 @@
  *
  * @param entity The entity to kill
  */
-void SDK::kill(SDK::Player* entity)
+void SDK::Kill(SDK::Player* entity)
 {
 	DWORD killFunc = 0x426C60;
 	__asm {

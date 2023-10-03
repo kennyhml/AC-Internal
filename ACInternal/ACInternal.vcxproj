@@ -193,6 +193,7 @@
     <ClCompile Include="src\sdk\message.cpp" />
     <ClCompile Include="src\sdk\player.cpp" />
     <ClCompile Include="src\sdk\player.h" />
+    <ClCompile Include="src\sdk\traceline.cpp" />
     <ClCompile Include="src\settings.cpp" />
     <ClCompile Include="src\tools\mem.cpp" />
   </ItemGroup>

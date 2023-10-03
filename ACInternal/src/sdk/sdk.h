@@ -1,8 +1,5 @@
 #pragma once
-
 #include <Windows.h>
-#include <memory>
-
 
 namespace SDK
 {
@@ -24,7 +21,7 @@ namespace SDK
 	extern tAllMessage sendAllMessage;
 	extern tPlayerMessage sendPlayerMesage;
 
-	extern void kill(Player* entity);
-
+	extern void Kill(Player* entity);
+	extern bool IsVisible(Player* entity);
 
 }
