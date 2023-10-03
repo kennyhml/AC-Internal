@@ -20,4 +20,4 @@ The cooler brother of [AC-External](https://github.com/kennyhml/AC-External).
 [godmode]: https://github.com/kennyhml/AC-Internal/blob/bdcccaf0d971875973c4ae83b4609dd55523b33a/ACInternal/src/hooks/health.cpp#L8
 [headshot]: https://github.com/kennyhml/AC-Internal/blob/bdcccaf0d971875973c4ae83b4609dd55523b33a/ACInternal/src/hooks/headshot.cpp#L7
 [map]: https://github.com/kennyhml/AC-Internal/blob/bdcccaf0d971875973c4ae83b4609dd55523b33a/ACInternal/src/hooks/map.cpp#L6
-[kill]: https://github.com/kennyhml/AC-Internal/blob/bdcccaf0d971875973c4ae83b4609dd55523b33a/ACInternal/src/sdk/kill.cpp#L40
+[kill]: https://github.com/kennyhml/AC-Internal/blob/bf304a478de419e63c95180235ac05c4f34fb233/ACInternal/src/sdk/kill.cpp#L40
