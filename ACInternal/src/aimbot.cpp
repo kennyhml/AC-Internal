@@ -63,6 +63,7 @@ namespace aimbot
 			// Filter out entities that are dead, one the same team or simply not visible to us
 			if (!IsValidTarget(entity, mode)) { continue; }
 
+
 			// Filter out entities that are further than our max range to aimbot
 			float distance = GetDistance(data::localPlayer->headPos, entity->headPos);
 			if (distance > settings::aimbot::maxDistance) { continue; }

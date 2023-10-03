@@ -3,8 +3,9 @@
 #include <stdexcept>
 
 hooks::Hook::Hook(BYTE* src, BYTE* dst, BYTE* gatewayPointer, int size)
-	: src(src), dst(dst), gatewayPointer(gatewayPointer), size(size) {};
-
+	: src(src), dst(dst), gatewayPointer(gatewayPointer), size(size) {
+	allHooks.push_back(this);
+};
 
 hooks::Hook::Hook(const char* exportName, const char* moduleName, BYTE* dst, BYTE* gatewayPointer, int size)
 	: dst(dst), gatewayPointer(gatewayPointer), size(size)
@@ -16,6 +17,7 @@ hooks::Hook::Hook(const char* exportName, const char* moduleName, BYTE* dst, BYT
 	if (!exportAddr) { throw std::exception((std::string("GetProcAddress failed for ") + exportName).c_str()); }
 
 	this->src = reinterpret_cast<BYTE*>(exportAddr);
+	allHooks.push_back(this);
 }
 
 void hooks::Hook::Enable()
@@ -54,7 +56,9 @@ void hooks::Hook::Toggle()
 }
 
 hooks::Patcher::Patcher(BYTE* src, BYTE* dst, int size)
-	: src(src), dst(dst), size(size) {};
+	: src(src), dst(dst), size(size) {
+	allPatches.push_back(this);
+};
 
 void hooks::Patcher::Enable()
 {

@@ -8,6 +8,8 @@
 #include <vector>
 #include <iostream>
 
+#define PI 3.14159f
+
 // This needs adjustment for every game depending on how they scale, it is
 // used to calculate how much we scale the drawings based on the distance.
 const int GAME_UNIT_MAGIC = 400;
@@ -199,7 +201,7 @@ void esp::DrawAllPlayers()
 		DrawPlayer(*reinterpret_cast<SDK::Player**>(entityList + offset), matrix);
 	}
 
-	GL::DrawCircle(data::gameRect.right / 2, data::gameRect.bottom / 2, settings::aimbot::radius * 3, 100, 1, rgb::green);
+	GL::DrawCircle(data::gameRect.right / 2, data::gameRect.bottom / 2, settings::aimbot::radius * PI, 100, 1, rgb::green);
 	GL::RestoreGL();
 	if (settings::aimbot::wallhack) { glDisable(GL_DEPTH_TEST); }
 }

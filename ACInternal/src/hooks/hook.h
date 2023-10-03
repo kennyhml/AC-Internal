@@ -3,11 +3,15 @@
 #include "../data.h"
 #include <Windows.h>
 #include <iostream>
+#include <vector>
+
 
 namespace hooks
 {
 	struct Hook
 	{
+		inline static std::vector<Hook*> allHooks;
+
 		Hook(BYTE* src, BYTE* dst, BYTE* gatewayPointer, int size);
 		Hook(const char* exportName, const char* moduleName, BYTE* dst, BYTE* gatewayPointer, int size);
 
@@ -27,6 +31,8 @@ namespace hooks
 
 	struct Patcher
 	{
+		inline static std::vector<Patcher*> allPatches;
+
 		Patcher(BYTE* src, BYTE* dst, int size);
 
 		bool isPatched{ false };
