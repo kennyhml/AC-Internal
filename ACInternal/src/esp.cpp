@@ -129,6 +129,21 @@ Rect GetBoundingBox(const Vector2& screen, float distance)
 }
 
 /**
+ * @brief Checks whether our crosshair is within a given bounding box
+ *
+ * @param screen The position of the player on the screen.
+ * @param distance The distance to the player from our local player.
+ */
+bool IsTargetted(Rect box)
+{
+	Vector2 crosshair{ data::gameRect.right / 2, data::gameRect.bottom / 2 };
+
+	return (box.x < crosshair.x && box.x + box.w > crosshair.x
+		&& box.y < crosshair.y && box.y + box.h > crosshair.y);
+}
+
+
+/**
  * @brief Draws a single player's ESP box on the screen. Does not draw:
  * @brief - Dead players
  * @brief - Players not within our FOV
@@ -151,7 +166,6 @@ void esp::DrawPlayer(SDK::Player* player, float matrix[16])
 
 	// Check whether we are drawing an enemy or a friendly.
 	SDK::GameMode mode = *reinterpret_cast<SDK::GameMode*>(data::moduleBaseAddress + 0x10F49C);
-	auto color = player->isEnemy(data::localPlayer->team, mode) ? rgb::red : rgb::green;
 
 	// Distance to the player is important to do the drawing math later on
 	float distance = GetDistance(data::localPlayer->headPos, player->headPos);
@@ -163,7 +177,19 @@ void esp::DrawPlayer(SDK::Player* player, float matrix[16])
 	GL::Font& font = distance > 55 ? fontSmall : distance > 20 ? fontMedium : fontLarge;
 	Vector2 origin{ data::gameRect.right / 2, data::gameRect.bottom };
 
-	// Do the actual drawing
+	// Get the color. Friendly: green in any case
+	// Enemy: Orange if hidden, red if visible, blue if eligible for teleport.
+	const GLubyte* color;
+	if (!player->isEnemy(data::localPlayer->team, mode)) color = rgb::green;
+	else {
+		if (IsTargetted(box)) {
+			color = rgb::blue;
+			if (GetAsyncKeyState(VK_TAB) & 1) { data::localPlayer->feetPos = player->feetPos; }
+		}
+		else if (IsVisible(player)) { color = rgb::red; }
+		else { color = rgb::orange; }
+	}
+
 	GL::DrawOutline(box, thickness, color);
 	DrawStats(player, box);
 	if (settings::esp::displayLine) { GL::DrawLine(origin.x, origin.y, screen.x, screen.y + box.h / 2, 1.f, color); }

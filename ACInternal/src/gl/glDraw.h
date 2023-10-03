@@ -13,6 +13,8 @@ namespace rgb
 	const GLubyte gray[3] = { 55, 55, 55 };
 	const GLubyte lightgray[3] = { 192, 192, 192 };
 	const GLubyte black[3] = { 0, 0, 0 };
+	const GLubyte orange[3] = { 255, 165, 0 };
+	const GLubyte blue[3] = { 0, 0, 255 };
 
 }
 
