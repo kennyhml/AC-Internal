@@ -18,8 +18,8 @@ The cooler brother of [AC-External](https://github.com/kennyhml/AC-External).
 - No Recoil, Rapid Fire, Infinite Ammo... (same as the external variant, but only applies to local player this time)
 
 <p float="left">
-  <img src="demo/demoTeleport.gif" width="420" height="245" />
-  <img src="demo/demoWallhackAimbot.gif" width="420" height="245" />
+  <img src="demo/demoTeleport.gif" width="420" height="225" />
+  <img src="demo/demoWallhackAimbot.gif" width="420" height="225" />
 </p>
 
 
